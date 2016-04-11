@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { createHistory } from 'history'
-import { useRouterHistory } from 'react-router'
+import { createHistory } from 'history';
+import { useRouterHistory } from 'react-router';
 import { routerMiddleware, syncHistoryWithStore } from 'react-router-redux';
 
 import routes from './routes';
@@ -16,7 +16,7 @@ const store = configureStore([ routerMiddleware(history) ], { });
 const reduxHistory = syncHistoryWithStore(history, store);
 
 // Fire first events.
-store.dispatch(loadCredentials());
+// store.dispatch(loadCredentials());
 
 // Render application.
 ReactDOM.render(
@@ -28,6 +28,6 @@ ReactDOM.render(
 
 // Show the developer tools.
 if (process.env.NODE_ENV !== 'production') {
-  const showDevTools = require('./showDevTools');
+  const showDevTools = require('./utils/showDevTools');
   showDevTools(store);
 }

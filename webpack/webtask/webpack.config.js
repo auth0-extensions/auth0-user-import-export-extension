@@ -18,6 +18,7 @@ module.exports = {
     'body-parser': 'commonjs body-parser',
     'express-jwt': 'commonjs express-jwt',
     superagent: 'commonjs superagent',
+    'auth0-oauth2-express': 'commonjs auth0-oauth2-express',
     nconf: 'commonjs nconf',
     express: 'commonjs express',
     'webtask-tools': 'commonjs webtask-tools',
