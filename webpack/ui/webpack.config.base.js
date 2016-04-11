@@ -8,7 +8,7 @@ module.exports = {
 
   // The application and the vendor libraries.
   entry: {
-    app: path.resolve(__dirname, '../../client/app.js'),
+    app: path.resolve(__dirname, '../../app.js'),
     vendors: [
       'axios',
       'bluebird',
@@ -28,8 +28,7 @@ module.exports = {
       'redux-form',
       'redux-thunk',
       'redux-logger',
-      'redux-promise-middleware',
-      'redux-simple-router'
+      'redux-promise-middleware'
     ]
   },
 
@@ -74,8 +73,8 @@ module.exports = {
   plugins: [
     new webpack.NoErrorsPlugin(),
     new webpack.ProvidePlugin({
-      'React': 'react',
-      'Promise': 'imports?this=>global!exports?global.Promise!bluebird'
+      React: 'react',
+      Promise: 'imports?this=>global!exports?global.Promise!bluebird'
     }),
     new webpack.DefinePlugin({
       'process.env': {

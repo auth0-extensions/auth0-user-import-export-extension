@@ -29,6 +29,9 @@ new WebpackDevServer(webpack(config), options)
       if (err) {
         console.error(err);
       } else {
-        console.log('Development server listening on: http://localhost:3001');
+        console.log('Webpack server listening on: http://localhost:3001');
+
+        // Start the actual server.
+        require('../../server');
       }
     });

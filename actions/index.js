@@ -1,2 +1,3 @@
-export * as exportActions from './exportActions';
-export * as importActions from './importActions';
+export * as exportActions from './export';
+export * as importActions from './import';
+export * as connectionActions from './connection';

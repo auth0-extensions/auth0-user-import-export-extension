@@ -13,7 +13,15 @@ module.exports = {
     libraryTarget: 'commonjs2'
   },
   externals: {
-    nconf: 'commonjs nconf'
+    jade: 'commonjs jade',
+    jsonwebtoken: 'commonjs jsonwebtoken',
+    'body-parser': 'commonjs body-parser',
+    'express-jwt': 'commonjs express-jwt',
+    superagent: 'commonjs superagent',
+    nconf: 'commonjs nconf',
+    express: 'commonjs express',
+    'webtask-tools': 'commonjs webtask-tools',
+    ejs: 'commonjs ejs'
   },
   module: {
     loaders: [

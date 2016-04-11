@@ -5,14 +5,8 @@ import { Tabs, Tab } from 'react-bootstrap';
 
 import { connectionActions } from '../actions';
 
-export default class ImportContainer extends Component {
-  componentWillMount() {
-    this.props.fetchConnections();
-  }
-
+export default class ExportContainer extends Component {
   render() {
-    const { connections } = this.props;
-
     return (
       <div></div>
     );
@@ -25,4 +19,4 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps, { ...connectionActions })(ImportContainer);
+export default connect(mapStateToProps, { ...connectionActions })(ExportContainer);
