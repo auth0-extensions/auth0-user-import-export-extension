@@ -1,0 +1,31 @@
+{
+  "name": "auth0-user-import-export-extension",
+  "version": "1.0.0",
+  "description": "An extension that allows you to import and export users to your Auth0 account",
+  "main": "server.js",
+  "dependencies": {
+    "auth0-oauth2-express": "^1.1.5",
+    "ejs": "^2.4.1",
+    "express": "^4.13.4",
+    "webtask-tools": "^1.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/auth0/auth0-user-import-export-extension.git"
+  },
+  "keywords": [
+    "auth0",
+    "extension"
+  ],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/auth0/auth0-user-import-export-extension/issues"
+  },
+  "homepage": "https://github.com/auth0/auth0-user-import-export-extension#readme"
+}

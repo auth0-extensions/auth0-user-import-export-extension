@@ -1,0 +1,16 @@
+{
+  "title": "User Import/Export",
+  "name": "auth0-user-import-export",
+  "version": "1.0.0",
+  "author": "auth0",
+  "description": "This extension allows you to import/export users from/to your account.",
+  "type": "application",
+  "repository": "https://github.com/auth0/auth0-user-import-export-extension",
+  "keywords": [
+    "auth0",
+    "extension"
+  ],
+  "auth0": {
+    "scopes": "create:users read:users"
+  }
+}
