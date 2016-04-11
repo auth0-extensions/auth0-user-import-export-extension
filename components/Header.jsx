@@ -14,9 +14,9 @@ class Header extends Component {
             <ul className="nav navbar-nav navbar-right">
               <li className="dropdown">
                 <span role="button" data-toggle="dropdown" data-target="#" className="btn-dro btn-username">
-                  <img src={user.get('picture')} className="picture avatar" />
+                  <img src={'picture'} className="picture avatar" />
                   <span className="username-text truncate">
-                    {user.get('nickname') || user.get('email')}
+                    {'user'}
                   </span>
                   <i className="icon-budicon-460"></i>
                 </span>

@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
 
+import { authActions } from '../actions';
 import DevTools from './DevTools';
 import Header from '../components/Header';
 import { Sidebar, SidebarItem } from '../components/Dashboard';
@@ -28,8 +29,9 @@ class App extends Component {
 
 function select(state) {
   return {
-    user: state.auth.get('user')
+    user: {
+    }
   };
 }
 
-export default connect(select, { logout })(App);
+export default connect(select, { ...authActions })(App);
