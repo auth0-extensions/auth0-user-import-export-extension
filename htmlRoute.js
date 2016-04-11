@@ -1,4 +1,6 @@
 const ejs = require('ejs');
+const url = require('url');
+const nconf = require('nconf');
 
 module.exports = () => {
   const template = `
@@ -17,7 +19,7 @@ module.exports = () => {
     </head>
     <body>
       <div id="app"></div>
-      <script type="text/javascript">window.config = { BASE_PATH: '/' }</script>
+      <script type="text/javascript">window.config = <%- JSON.stringify(config) %>;</script>
       <script type="text/javascript" src="//cdn.auth0.com/js/lock-9.0.min.js"></script>
       <script type="text/javascript" src="//cdn.auth0.com/manage/v0.3.973/components/ZeroClipboard/ZeroClipboard.js"></script>
       <script type="text/javascript" src="//cdn.auth0.com/manage/v0.3.973/js/bundle.js"></script>
@@ -27,6 +29,16 @@ module.exports = () => {
   `;
 
   return (req, res, next) => {
-    res.send(ejs.render(template, { }));
+    const config = {
+      AUTH0_DOMAIN: nconf.get('AUTH0_DOMAIN'),
+      BASE_URL: url.format({
+        protocol: nconf.get('NODE_ENV') !== 'production' ? 'http' : 'https',
+        host: req.get('host'),
+        pathname: url.parse(req.originalUrl || '').pathname.replace(req.path, '')
+      }),
+      BASE_PATH: url.parse(req.originalUrl || '').pathname.replace(req.path, '')
+    };
+
+    res.send(ejs.render(template, { config }));
   };
 };

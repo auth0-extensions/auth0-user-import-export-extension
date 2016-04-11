@@ -1,11 +1,18 @@
-const ejs      = require('ejs');
-const nconf    = require('nconf');
-const express  = require('express');
-const auth0    = require('auth0-oauth2-express');
-const webtask  = require('webtask-tools');
+const path = require('path');
+const nconf = require('nconf');
+const express = require('express');
+const auth0 = require('auth0-oauth2-express');
 
-const metadata  = require('./webtask.json');
+const metadata = require('./webtask.json');
 const htmlRoute = require('./htmlRoute');
+
+nconf
+  .argv()
+  .env()
+  .file(path.join(__dirname, './config.json'))
+  .defaults({
+    NODE_ENV: 'development'
+  });
 
 const app = express();
 app.use(auth0({

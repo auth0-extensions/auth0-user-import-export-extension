@@ -7,7 +7,7 @@ import { importReducer } from './import';
 
 export default combineReducers({
   routing: routerReducer,
-  importReducer,
-  exportReducer,
+  import: importReducer,
+  export: exportReducer,
   form: formReducer
 });
