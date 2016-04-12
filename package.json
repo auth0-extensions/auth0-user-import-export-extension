@@ -9,6 +9,7 @@
     "express": "^4.13.4",
     "moment": "^2.12.0",
     "nconf": "^0.8.4",
+    "node-uuid": "^1.4.7",
     "webtask-tools": "^1.3.0"
   },
   "devDependencies": {
