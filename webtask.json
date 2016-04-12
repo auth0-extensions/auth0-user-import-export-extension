@@ -13,6 +13,6 @@
     "extension"
   ],
   "auth0": {
-    "scopes": "create:users read:users"
+    "scopes": "create:users read:users read:connections"
   }
 }
