@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { findDOMNode } from 'react-dom';
 import { Button } from 'react-bootstrap';
 
-import { ButtonToolbar, Table, TableCell, TableBody, TableIconCell, TableTextCell, TableHeader, TableColumn, TableRow } from '../components/Dashboard';
+import { Table, TableCell, TableAction, TableBody, TableIconCell, TableTextCell, TableHeader, TableColumn, TableRow } from '../components/Dashboard';
 
 
 class ColumnExport extends Component {
@@ -16,6 +16,10 @@ class ColumnExport extends Component {
     // Reset the textboxes.
     findDOMNode(this.refs.userAttribute).value = '';
     findDOMNode(this.refs.columnName).value = '';
+  }
+
+  onRemoveColumn = (col) => {
+    this.props.onRemoveColumn(col._id);
   }
 
   onChange = () => {
@@ -39,8 +43,9 @@ class ColumnExport extends Component {
       <Table>
         <TableHeader>
           <TableColumn width="3%" />
-          <TableColumn width="52%">User Attribute</TableColumn>
-          <TableColumn width="45%">Column Name</TableColumn>
+          <TableColumn width="40%">User Attribute</TableColumn>
+          <TableColumn width="40%">Column Name</TableColumn>
+          <TableColumn width="5%" />
         </TableHeader>
         <TableBody>
         {columns.map((col, index) =>
@@ -48,6 +53,12 @@ class ColumnExport extends Component {
             <TableIconCell color="green" icon="573" />
             <TableTextCell><code>{col.userAttribute}</code></TableTextCell>
             <TableTextCell>{col.columnName}</TableTextCell>
+            <TableCell>
+              <TableAction id={`remove-column-${index}`}
+                type="success" title="Remove" icon="263"
+                onClick={this.onRemoveColumn} args={[ col ]}
+              />
+            </TableCell>
           </TableRow>
         )}
         </TableBody>
@@ -85,7 +96,8 @@ class ColumnExport extends Component {
 ColumnExport.propTypes = {
   loading: PropTypes.bool,
   columns: PropTypes.array,
-  onAddColumn: PropTypes.func.isRequired
+  onAddColumn: PropTypes.func.isRequired,
+  onRemoveColumn: PropTypes.func.isRequired
 };
 
 export default ColumnExport;
