@@ -13,10 +13,7 @@ export const toCSV = (filename, columns, data) => {
 }
 
 export const toJSON = (filename, columns, data) => {
-  console.log('file', filename);
-  console.log('columns', columns);
-  console.log('data', data);
-  const mappedData = map(columns, data);
+  const mappedData = (columns && columns.length) ? map(columns, data) : data;
   const json = [ JSON.stringify(mappedData, null, 2) ];
 
   const blob = new Blob(json, { type: 'text/plain;charset=utf-8' });

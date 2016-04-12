@@ -13,6 +13,8 @@ export default class ExportContainer extends Component {
   }
 
   onExport = () => {
+    var foo = this.props.export.toJS();
+    console.log('foo', foo);
     this.props.exportUsers('', this.props.export.get('columns').toJS());
   }
 
@@ -83,7 +85,7 @@ export default class ExportContainer extends Component {
           <div className="col-xs-12">
             <a href="#" ref="downloadLink" style={{ display: 'none' }} />
             <ButtonToolbar>
-              <Button bsStyle="primary" bsSize="small" disabled={false} onClick={this.props.exportUsers}>
+              <Button bsStyle="primary" bsSize="small" disabled={false} onClick={this.onExport}>
                 Export
               </Button>
               <Button bsStyle="default" bsSize="small" disabled={false} onClick={this.props.onConfirm}>
