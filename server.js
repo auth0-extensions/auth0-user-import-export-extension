@@ -81,5 +81,5 @@ if ((process.env.NODE_ENV || 'development') === 'development') {
     }
   });
 } else {
-  module.exports = Webtask.fromExpress(app);
+  module.exports = app;
 }
