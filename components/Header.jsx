@@ -11,6 +11,7 @@ class Header extends Component {
       <nav role="navigation" className="navbar navbar-default">
         <div className="container">
           <div className="navbar-header">
+            <img src="https://cdn.rawgit.com/auth0/auth0-user-import-export-extension/master/assets/logo.svg" style={{float: 'left', minWidth: '55px', minHeight: '55px', display: 'block', marginRight: '15px' }}></img>
             <a className="navbar-brand" href="#" style={{width: '50%'}}>Users Import / Export</a>
           </div>
           <div id="navbar-collapse" className="collapse navbar-collapse">
