@@ -10,14 +10,15 @@
     "comma-separated-values": "^3.6.4",
     "ejs": "^2.4.1",
     "express": "^4.13.4",
-    "jwt-decode": "^2.0.1",
-    "moment": "^2.12.0",
     "nconf": "^0.8.4",
-    "node-uuid": "^1.4.7",
-    "react-dropzone": "^3.4.0",
     "webtask-tools": "^1.3.0"
   },
   "devDependencies": {
+    "node-uuid": "^1.4.7",
+    "react-dropzone": "^3.4.0",
+    "jwt-decode": "^2.0.1",
+    "moment": "^2.12.0",
+    "node-uuid": "^1.4.7",
     "autoprefixer": "^6.3.4",
     "babel": "^6.5.2",
     "babel-core": "^6.7.4",
@@ -90,6 +91,7 @@
     "serve:prod": "NODE_ENV=production node server.js",
     "postinstall": "npm run client:build",
     "extension:build": "webpack -p --config ./webpack/webtask/webpack.config.js",
+    "extension:size": "NODE_ENV=production webpack -p --config ./webpack/webtask/webpack.config.js --json > ./webpack/webtask/bundle-size.json && node ./webpack/webtask/bundle-size.js",
     "build": "npm run clean && npm run client:build && npm run extension:build"
   },
   "repository": {
