@@ -7,7 +7,7 @@ module.exports = () => {
     <!DOCTYPE html>
     <html lang="en">
     <head>
-      <title>User Import/Export Dashboard</title>
+      <title>User Import / Export Dashboard</title>
       <meta charset="UTF-8" />
       <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
