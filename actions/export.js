@@ -24,6 +24,15 @@ export function removeColumn(id) {
   };
 }
 
+export function updateSearchFilter(searchFilter) {
+  return {
+    type: constants.UPDATE_SEARCH_FILTER,
+    payload: {
+      searchFilter
+    }
+  };
+}
+
 export function updateSettings(settings) {
   return {
     type: constants.UPDATE_SETTINGS,
@@ -46,7 +55,6 @@ export function getUserCount(query = '') {
 }
 
 function downloadUsers(settings, query, page = 1) {
-  console.log(settings);
   let url = `https://${window.config.AUTH0_DOMAIN}/api/v2/users?per_page=100&page=${page}&search_engine=v2`;
   if (settings.sortBy && settings.sortBy.length) {
     url += `&sort=${settings.sortBy}:${settings.sortDesc ? -1 : 1}`;
@@ -65,8 +73,24 @@ function downloadUsers(settings, query, page = 1) {
     });
 }
 
-export function exportUsers(query, settings, columns, defaultColumns) {
-  return (dispatch) => {
+export function closeExportDialog() {
+  return {
+    type: constants.CLOSE_EXPORT_DIALOG
+  }
+}
+
+export function downloadUsersToFile(settings, columns, defaultColumns, items) {
+  if (settings.format === 'json') {
+    toJSON('export.json', columns, items);
+  } else {
+    toCSV('export.csv', columns && columns.length ? columns : defaultColumns, items);
+  }
+
+  return closeExportDialog();
+}
+
+export function exportUsers(query, settings) {
+  return (dispatch, getState) => {
     // Start.
     dispatch({
       type: constants.EXPORT_USERS_STARTED
@@ -79,6 +103,11 @@ export function exportUsers(query, settings, columns, defaultColumns) {
     // Download everything.
     promiseWhile(() => !stopped,
       () => downloadUsers(settings, query, page).then(({ res, nextPage }) => {
+        if (!getState().export.get('process').get('started')) {
+          stopped = true;
+          return;
+        }
+
         if (!res.data || !res.data.length) {
           stopped = true;
         } else {
@@ -102,17 +131,17 @@ export function exportUsers(query, settings, columns, defaultColumns) {
         page = nextPage;
       }))
       .then(() => {
+        if (!getState().export.get('process').get('started')) {
+          return;
+        }
+
         // Report progress.
         dispatch({
-          type: constants.EXPORT_USERS_COMPLETE
+          type: constants.EXPORT_USERS_COMPLETE,
+          payload: {
+            items
+          }
         });
-
-        // Save.
-        if (settings.format === 'json') {
-          toJSON('export.json', columns, items);
-        } else {
-          toCSV('export.csv', columns && columns.length ? columns : defaultColumns, items);
-        }
       });
   };
 }

@@ -19,8 +19,10 @@ class ExportProgressDialog extends Component {
       title = `Exported ${data.query.size} Users`;
     }
 
+    const onDownload = data.process.complete ? this.props.onDownload : null;
+
     return (
-      <Confirm confirmMessage={'Close'} size="large" title={title} show={data.process.started} loading={process.started} onCancel={() => {}} onConfirm={() => {}}>
+      <Confirm confirmMessage={'Download'} size="large" title={title} show={data.process.started} loading={false} onCancel={this.props.onClose} onConfirm={onDownload}>
          <ProgressBar active={percentage !== 100} now={percentage} label={`${data.process.current} of ${data.query.size}`} />
       </Confirm>
     );
@@ -29,12 +31,8 @@ class ExportProgressDialog extends Component {
 
 ExportProgressDialog.propTypes = {
   export: React.PropTypes.object.isRequired,
-  onConfirm: React.PropTypes.func.isRequired,
-  onCancel: React.PropTypes.func.isRequired,
-  onReset: React.PropTypes.func.isRequired,
-  onSearch: React.PropTypes.func.isRequired,
-  onSelectUser: React.PropTypes.func.isRequired,
-  onUnselectUser: React.PropTypes.func.isRequired
+  onDownload: React.PropTypes.func.isRequired,
+  onClose: React.PropTypes.func.isRequired
 };
 
 export default ExportProgressDialog;

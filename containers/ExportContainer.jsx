@@ -11,12 +11,18 @@ export default class ExportContainer extends Component {
   }
 
   onExport = () => {
-    const { columns, defaultColumns, settings } = this.props.export.toJS();
-    this.props.exportUsers('', settings, columns, defaultColumns);
+    const { query, settings } = this.props.export.toJS();
+    this.props.exportUsers(query.filter, settings);
+  }
+
+  onDownload = () => {
+    const data = this.props.export.toJS();
+    this.props.downloadUsersToFile(data.settings, data.columns, data.defaultColumns, data.process.items);
   }
 
   onQueryChanged = (e) => {
     this.props.getUserCount(e.target.value);
+    this.props.updateSearchFilter(e.target.value);
   }
 
   onAddColumn = ({ userAttribute, columnName }) => {
@@ -43,7 +49,7 @@ export default class ExportContainer extends Component {
 
     return (
       <div>
-        <ExportProgressDialog export={this.props.export} />
+        <ExportProgressDialog export={this.props.export} onDownload={this.onDownload} onClose={this.props.closeExportDialog} />
         <ExportFilterTextBox loading={query.loading} defaultValue="" onBlur={this.onQueryChanged} querySize={query.size} />
         <ExportColumns columns={columns}
           onAddDefaultColumns={this.onAddDefaultColumns} onAddColumn={this.onAddColumn} onRemoveColumn={this.props.removeColumn}
@@ -51,7 +57,7 @@ export default class ExportContainer extends Component {
         <ExportSettings export={this.props.export} onChange={this.props.updateSettings} />
         <div className="row">
           <div className="col-xs-12">
-            <ButtonToolbar>
+            <ButtonToolbar style={{ marginTop: '30px' }}>
               <Button bsStyle="primary" bsSize="small" disabled={false} onClick={this.onExport}>
                 {this.getExportTitle(query)}
               </Button>
@@ -72,7 +78,8 @@ ExportContainer.propTypes = {
   removeColumn: PropTypes.func.isRequired,
   getUserCount: PropTypes.func.isRequired,
   exportUsers: PropTypes.func.isRequired,
-  updateSettings: PropTypes.func.isRequired
+  updateSettings: PropTypes.func.isRequired,
+  downloadUsersToFile: PropTypes.func.isRequired
 };
 
 function mapStateToProps(state) {

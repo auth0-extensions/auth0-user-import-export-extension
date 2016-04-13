@@ -4,7 +4,6 @@ import * as constants from '../constants';
 import createReducer from '../utils/createReducer';
 
 const initialState = {
-  loading: false,
   formats: {
     csv: 'Tab Separated Value file (*.csv)',
     json: 'JSON file (*.json)'
@@ -31,10 +30,12 @@ const initialState = {
   query: {
     loading: true,
     size: 0,
-    error: null
+    error: null,
+    filter: null
   },
   process: {
     started: false,
+    complete: false,
     total: 0,
     current: 0
   }
@@ -44,6 +45,12 @@ export const exportReducer = createReducer(fromJS(initialState), {
   [constants.UPDATE_SETTINGS]: (state, action) =>
     state.merge({
       settings: fromJS(action.payload.settings)
+    }),
+  [constants.UPDATE_SEARCH_FILTER]: (state, action) =>
+    state.merge({
+      query: state.get('query').merge({
+        filter: action.payload.searchFilter
+      })
     }),
   [constants.ADD_COLUMN]: (state, action) =>
     state.merge({
@@ -77,10 +84,18 @@ export const exportReducer = createReducer(fromJS(initialState), {
         error: action.payload
       }
     }),
+  [constants.CLOSE_EXPORT_DIALOG]: (state) =>
+    state.merge({
+      process: {
+        started: false,
+        current: 0
+      }
+    }),
   [constants.EXPORT_USERS_STARTED]: (state) =>
     state.merge({
       process: {
         started: true,
+        complete: false,
         current: 0
       }
     }),
@@ -96,6 +111,15 @@ export const exportReducer = createReducer(fromJS(initialState), {
       process: {
         started: true,
         current: action.payload.count
+      }
+    }),
+  [constants.EXPORT_USERS_PROGRESS]: (state, action) =>
+    state.merge({
+      process: {
+        started: true,
+        complete: true,
+        current: action.payload.count,
+        items: action.payload.items
       }
     })
 });
