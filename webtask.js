@@ -1,7 +1,7 @@
 const nconf = require('nconf');
-const Webtask = require('webtask-tools');
+const webtask = require('webtask-tools');
 
-module.exports = Webtask.fromExpress((req, res) => {
+module.exports = webtask.fromExpress((req, res) => {
   nconf.defaults({
     AUTH0_DOMAIN: req.webtaskContext.secrets.AUTH0_DOMAIN,
     AUTH0_SCOPES: req.webtaskContext.secrets.AUTH0_SCOPES,
