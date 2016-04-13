@@ -61,9 +61,6 @@ export default class ExportContainer extends Component {
               <Button bsStyle="primary" bsSize="small" disabled={false} onClick={this.onExport}>
                 {this.getExportTitle(query)}
               </Button>
-              <Button bsStyle="default" bsSize="small" disabled={false}>
-                Preview
-              </Button>
             </ButtonToolbar>
           </div>
         </div>
