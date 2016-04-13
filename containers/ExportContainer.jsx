@@ -1,11 +1,9 @@
 import { connect } from 'react-redux';
-import { findDOMNode } from 'react-dom';
 import React, { Component, PropTypes } from 'react';
-import { Alert, Button, ButtonToolbar } from 'react-bootstrap';
+import { Button, ButtonToolbar } from 'react-bootstrap';
 
 import { exportActions } from '../actions';
-import ColumnExport from '../components/ColumnExport';
-import UserSearchTextBox from '../components/UserSearchTextBox';
+import { ExportFilterTextBox, ExportColumns, ExportSettings, ExportProgressDialog } from '../components';
 
 export default class ExportContainer extends Component {
   componentWillMount = () => {
@@ -13,9 +11,8 @@ export default class ExportContainer extends Component {
   }
 
   onExport = () => {
-    var foo = this.props.export.toJS();
-    console.log('foo', foo);
-    this.props.exportUsers('', this.props.export.get('columns').toJS());
+    const { columns, defaultColumns, settings } = this.props.export.toJS();
+    this.props.exportUsers('', settings, columns, defaultColumns);
   }
 
   onQueryChanged = (e) => {
@@ -26,73 +23,40 @@ export default class ExportContainer extends Component {
     this.props.addColumn(userAttribute, columnName);
   }
 
+  onAddDefaultColumns = () => {
+    const { defaultColumns } = this.props.export.toJS();
+    defaultColumns.forEach(col => this.props.addColumn(col.userAttribute, col.columnName));
+  }
+
+  getExportTitle(query) {
+    if (query && query.size) {
+      const size = query.size > 100000 ? 100000 : query.size;
+      return `Export ${size} Users`;
+    }
+    return 'Export';
+  }
+
   inputStyle = { marginRight: '5px', width: '300px' }
 
   render() {
-    const { formats, selectedFormat, query, columns } = this.props.export.toJS();
+    const { query, columns } = this.props.export.toJS();
 
     return (
       <div>
-        <div className="row">
-          <div className="col-xs-10">
-            <UserSearchTextBox defaultValue="" onBlur={this.onQueryChanged} />
-          </div>
-          <div className="col-xs-2">
-            <span className="label label-primary" style={{ border: '0px' }}>{query.size} users</span>
-          </div>
-        </div>
+        <ExportProgressDialog export={this.props.export} />
+        <ExportFilterTextBox loading={query.loading} defaultValue="" onBlur={this.onQueryChanged} querySize={query.size} />
+        <ExportColumns columns={columns}
+          onAddDefaultColumns={this.onAddDefaultColumns} onAddColumn={this.onAddColumn} onRemoveColumn={this.props.removeColumn}
+        />
+        <ExportSettings export={this.props.export} onChange={this.props.updateSettings} />
         <div className="row">
           <div className="col-xs-12">
-            <ColumnExport columns={columns} onAddColumn={this.onAddColumn} onRemoveColumn={this.props.removeColumn} />
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-xs-12">
-            <h4>Settings</h4>
-          </div>
-        </div>
-        <div className="row">
-          <div className="form-group">
-            <label className="col-xs-2 control-label">Sort By</label>
-            <div className="col-xs-5">
-              <input className="form-control" type="text" ref="sortBy" />
-              <div className="help-block">This setting allows you to specify the format in which you would like the export.</div>
-            </div>
-            <div className="col-xs-4">
-              <label className="control-label" style={{ position: 'absolute', left: '75px', marginTop: '3px' }}>Descending</label>
-              <div className="ui-switch">
-                <input type="checkbox" />
-                <label className="status"></label>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="row">
-          <div className="form-group">
-            <label className="col-xs-2 control-label">Export Format</label>
-            <div className="col-xs-5">
-              <select className="form-control" defaultValue={selectedFormat}>
-                <option value=""></option>
-                {Object.keys(formats).map((opt, index) => {
-                  return <option key={index} value={opt}>{formats[opt]}</option>;
-                })}
-              </select>
-              <div className="help-block">This setting allows you to specify the format in which you would like the export.</div>
-            </div>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-xs-12">
-            <a href="#" ref="downloadLink" style={{ display: 'none' }} />
             <ButtonToolbar>
               <Button bsStyle="primary" bsSize="small" disabled={false} onClick={this.onExport}>
-                Export
+                {this.getExportTitle(query)}
               </Button>
-              <Button bsStyle="default" bsSize="small" disabled={false} onClick={this.props.onConfirm}>
+              <Button bsStyle="default" bsSize="small" disabled={false}>
                 Preview
-              </Button>
-              <Button bsStyle="success" bsSize="small" disabled={false} onClick={this.props.onConfirm}>
-                Cancel
               </Button>
             </ButtonToolbar>
           </div>
@@ -106,7 +70,9 @@ ExportContainer.propTypes = {
   export: PropTypes.object.isRequired,
   addColumn: PropTypes.func.isRequired,
   removeColumn: PropTypes.func.isRequired,
-  getUserCount: PropTypes.func.isRequired
+  getUserCount: PropTypes.func.isRequired,
+  exportUsers: PropTypes.func.isRequired,
+  updateSettings: PropTypes.func.isRequired
 };
 
 function mapStateToProps(state) {

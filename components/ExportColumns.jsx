@@ -10,6 +10,11 @@ class ColumnExport extends Component {
     addEnabled: false
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextProps.columns !== this.props.columns ||
+      nextState.addEnabled !== this.state.addEnabled;
+  }
+
   onAddColumn = () => {
     this.props.onAddColumn(this.getValues());
 
@@ -33,6 +38,8 @@ class ColumnExport extends Component {
     userAttribute: findDOMNode(this.refs.userAttribute).value,
     columnName: findDOMNode(this.refs.columnName).value
   })
+
+  inputStyle = { marginRight: '5px', width: '300px' }
 
   renderColumns = (columns) => {
     if (!columns || !columns.length) {
@@ -66,28 +73,35 @@ class ColumnExport extends Component {
     );
   }
 
-  inputStyle = { marginRight: '5px', width: '300px' }
-
   render() {
     return (
-      <div>
-        <h4>Columns</h4>
-        <p>
-          You can decided which attributes should be included in the export.
-          The <strong>user attribute</strong> can be a static value like <code>user.app_metadata.name</code> or a Javascript expression like <code>user.app_metdata.name || user.name</code> which will then be evaluated during the export. The <strong>column name</strong> is how the value will be represented in the export.
-        </p>
-        <form className="form-inline">
-          <div className="form-group">
-            <input ref="userAttribute" type="text" className="form-control" placeholder="User Attribute" style={this.inputStyle} onChange={this.onChange} />
+      <div className="row">
+        <div className="col-xs-12">
+          <h5>Columns</h5>
+          <div className="row">
+            <div className="col-xs-9">
+              <p style={{ marginTop: '0px' }}>
+                You can decided which attributes should be included in the export.
+                The <strong>user attribute</strong> can be a static value like <code>user.app_metadata.name</code> or a Javascript expression like <code>user.app_metdata.name || user.name</code> which will then be evaluated during the export. The <strong>column name</strong> is how the value will be represented in the export.
+              </p>
+            </div>
+            <div className="col-xs-3">
+              <Button bsStyle="primary" bsSize="xs" onClick={this.props.onAddDefaultColumns}>Add Default Columns</Button>
+            </div>
           </div>
-          <div className="form-group">
-            <input ref="columnName" type="text" className="form-control" placeholder="Column Name" style={this.inputStyle} onChange={this.onChange} />
-          </div>
-          <Button bsStyle="primary" bsSize="small" disabled={!this.state.addEnabled} onClick={this.onAddColumn}>
-           Add
-         </Button>
-        </form>
-        {this.renderColumns(this.props.columns)}
+          <form className="form-inline">
+            <div className="form-group">
+              <input ref="userAttribute" type="text" className="form-control" placeholder="User Attribute / Expression" style={this.inputStyle} onChange={this.onChange} />
+            </div>
+            <div className="form-group">
+              <input ref="columnName" type="text" className="form-control" placeholder="Column Name" style={this.inputStyle} onChange={this.onChange} />
+            </div>
+            <Button bsStyle="primary" bsSize="small" disabled={!this.state.addEnabled} onClick={this.onAddColumn}>
+             Add
+           </Button>
+          </form>
+          {this.renderColumns(this.props.columns)}
+        </div>
       </div>
     );
   }
@@ -96,6 +110,7 @@ class ColumnExport extends Component {
 ColumnExport.propTypes = {
   loading: PropTypes.bool,
   columns: PropTypes.array,
+  onAddDefaultColumns: PropTypes.func.isRequired,
   onAddColumn: PropTypes.func.isRequired,
   onRemoveColumn: PropTypes.func.isRequired
 };

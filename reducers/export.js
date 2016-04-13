@@ -6,18 +6,45 @@ import createReducer from '../utils/createReducer';
 const initialState = {
   loading: false,
   formats: {
-    csv: 'Comma Separated Value file (*.csv)',
+    csv: 'Tab Separated Value file (*.csv)',
     json: 'JSON file (*.json)'
   },
-  selectedFormat: 'csv',
+  settings: {
+    sortBy: null,
+    sortDesc: false,
+    format: 'json'
+  },
   columns: [ ],
+  defaultColumns: [
+    { userAttribute: 'user.user_id', columnName: 'Id' },
+    { userAttribute: 'user.given_name', columnName: 'Given Name' },
+    { userAttribute: 'user.family_name', columnName: 'Family Name' },
+    { userAttribute: 'user.nickname', columnName: 'Nickname' },
+    { userAttribute: 'user.name', columnName: 'Name' },
+    { userAttribute: 'user.email', columnName: 'Email' },
+    { userAttribute: 'user.email_verified', columnName: 'Email Verified' },
+    { userAttribute: 'user.picture', columnName: 'Picture' },
+    { userAttribute: 'user.identities[0].connection', columnName: 'Connection' },
+    { userAttribute: 'user.created_at', columnName: 'Created At' },
+    { userAttribute: 'user.updated_at', columnName: 'Updated At' }
+  ],
   query: {
+    loading: true,
     size: 0,
     error: null
+  },
+  process: {
+    started: false,
+    total: 0,
+    current: 0
   }
 };
 
 export const exportReducer = createReducer(fromJS(initialState), {
+  [constants.UPDATE_SETTINGS]: (state, action) =>
+    state.merge({
+      settings: fromJS(action.payload.settings)
+    }),
   [constants.ADD_COLUMN]: (state, action) =>
     state.merge({
       columns: state.get('columns').push(fromJS(action.payload))
@@ -29,16 +56,46 @@ export const exportReducer = createReducer(fromJS(initialState), {
       columns: columns.delete(index)
     });
   },
+  [constants.FETCH_USER_COUNT_PENDING]: (state) =>
+    state.merge({
+      query: {
+        loading: true,
+        size: 0
+      }
+    }),
   [constants.FETCH_USER_COUNT_FULFILLED]: (state, action) =>
     state.merge({
       query: {
+        loading: false,
         size: action.payload.data.total
       }
     }),
   [constants.FETCH_USER_COUNT_REJECTED]: (state, action) =>
     state.merge({
       query: {
+        loading: true,
         error: action.payload
+      }
+    }),
+  [constants.EXPORT_USERS_STARTED]: (state) =>
+    state.merge({
+      process: {
+        started: true,
+        current: 0
+      }
+    }),
+  [constants.EXPORT_USERS_CANCEL]: (state) =>
+    state.merge({
+      process: {
+        started: false,
+        current: 0
+      }
+    }),
+  [constants.EXPORT_USERS_PROGRESS]: (state, action) =>
+    state.merge({
+      process: {
+        started: true,
+        current: action.payload.count
       }
     })
 });
