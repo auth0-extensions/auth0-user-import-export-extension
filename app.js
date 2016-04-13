@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { authActions } from './actions';
 import { Provider } from 'react-redux';
 import { createHistory } from 'history';
 import { useRouterHistory } from 'react-router';
@@ -17,9 +18,9 @@ const store = configureStore([ routerMiddleware(history) ], { });
 const reduxHistory = syncHistoryWithStore(history, store);
 
 // Fire first events.
-const idToken = '';
+const idToken = sessionStorage.getItem('apiToken');
 axios.defaults.headers.common.Authorization = `Bearer ${idToken}`;
-// store.dispatch(loadCredentials());
+store.dispatch(authActions.login(idToken));
 
 // Render application.
 ReactDOM.render(
