@@ -18,9 +18,9 @@ const store = configureStore([ routerMiddleware(history) ], { });
 const reduxHistory = syncHistoryWithStore(history, store);
 
 // Fire first events.
-const idToken = sessionStorage.getItem('apiToken');
-axios.defaults.headers.common.Authorization = `Bearer ${idToken}`;
-store.dispatch(authActions.login(idToken));
+const accessToken = sessionStorage.getItem('token');
+axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+store.dispatch(authActions.login(accessToken));
 
 // Render application.
 ReactDOM.render(
