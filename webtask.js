@@ -7,7 +7,7 @@ module.exports = webtask.fromExpress((req, res) => {
     AUTH0_SCOPES: req.webtaskContext.secrets.AUTH0_SCOPES,
     NODE_ENV: 'production',
     HOSTING_ENV: 'webtask',
-    CLIENT_VERSION: process.env.CLIENT_VERSION
+    CLIENT_VERSION: '1.3.1'
   });
 
   // Start the server.
