@@ -21,10 +21,10 @@ const idToken = '';
 axios.defaults.headers.common.Authorization = `Bearer ${idToken}`;
 
 const app = express();
-// app.use(auth0({
-//   scopes: nconf.get('AUTH0_SCOPES'),
-//   clientName: 'User Import/Export Extension'
-// }));
+app.use(auth0({
+  scopes: nconf.get('AUTH0_SCOPES'),
+  clientName: 'User Import/Export Extension'
+}));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
