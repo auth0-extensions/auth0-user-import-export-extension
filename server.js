@@ -4,7 +4,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const auth0 = require('auth0-oauth2-express');
 const request = require('request');
-const Readable = require('stream').Readable;
 
 const metadata = require('./webtask.json');
 const htmlRoute = require('./htmlRoute');
@@ -16,9 +15,6 @@ nconf
   .defaults({
     NODE_ENV: 'development'
   });
-
-const idToken = '';
-const defaultHeaders = { 'Authorization': `Bearer ${idToken}` };
 
 const app = express();
 app.use(auth0({
@@ -34,21 +30,24 @@ app.use('/meta', (req, res) => {
 });
 
 app.post('/users-import', (req, res) => {
-  var file = new Readable();
-  file.push(req.body.data.users);
-  file.push(null);
-  var postRequest = request.post({
+  const opt = {
     url: `https://${nconf.get('AUTH0_DOMAIN')}/api/v2/jobs/users-imports`,
-    headers: defaultHeaders
-  }, function (err, response, body) {
-    console.log(err, response, body);
-    if (err) {
-      console.log(err, response, body);
+    headers: {
+      Authorization: req.headers['Authorization']
     }
-    res.status(response.statusCode).send(body);
+  };
+
+  const post = request.post(opt, (err, response, body) => {
+    if (err) {
+      res.status(400);
+      return res.json({ error: err && err.message || body });
+    }
+
+    return res.status(response.statusCode).send(body);
   });
-  var form = postRequest.form();
-  form.append('users', file);
+
+  const form = post.form();
+  form.append('users', req.body.data.users, { filename: 'file.json', contentType: 'text/plain' });
   form.append('connection_id', req.body.data.connection_id);
 });
 
