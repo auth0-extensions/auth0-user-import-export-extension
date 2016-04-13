@@ -22,7 +22,7 @@ export default class ImportContainer extends Component {
     this.props.fetchConnections();
     setInterval(() => {
       this.props.probeImportStatus()
-    }, 1000);
+    }, 5000);
   }
 
   onDrop(newFiles) {

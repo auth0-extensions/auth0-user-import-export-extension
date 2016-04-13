@@ -29,16 +29,20 @@ export const importReducer = createReducer(fromJS(initialState), {
     let currentJobIndex = state.get('currentJobIndex');
     let updatedFiles = [];
     let loading = true;
+    let newCurrentJob = null;
     state.get('files').map((file, index) => {
       if (currentJob && currentJobIndex > -1 && index === currentJobIndex) {
         loading = false;
         file.status = currentJob.get('status');
+        file.id = currentJob.get('id');
+        newCurrentJob = file;
         updatedFiles.push(file);
       }
     });
     return state.merge({
       loading: loading,
-      files: updatedFiles
+      files: updatedFiles,
+      currentJob: newCurrentJob
     });
   },
   [constants.CANCEL_IMPORT]: (state, action) =>
@@ -86,13 +90,26 @@ export const importReducer = createReducer(fromJS(initialState), {
       loading: false,
       error: `An error occured while trying to get the status of the import job: ${action.payload.message || action.payload.statusText}`
     }),
-  [constants.PROBE_IMPORT_STATUS_FULFILLED]: (state, action) =>
-    state.merge({
+  [constants.PROBE_IMPORT_STATUS_FULFILLED]: (state, action) => {
+    let job = fromJS(action.payload.data);
+    let currentJob = state.get('currentJob');
+    currentJob.status = job.get('status');
+
+    let currentJobIndex = state.get('currentJobIndex');
+    let updatedFiles = [];
+    state.get('files').map((file, index) => {
+      if (index === currentJobIndex) {
+        file.status = job.get('status');
+        updatedFiles.push(file);
+      }
+    });
+    return state.merge({
       loading: false,
-      error: null,
-      currentJob: currentJob,
-      files: updatedFiles
-    }),
+      files: updatedFiles,
+      currentJob: null,
+      currentJobIndex: -1
+    });
+  },
   [constants.SET_CURRENT_JOB]: (state, action) =>
     state.merge({
       currentJob: fromJS(action.payload.currentJob),
