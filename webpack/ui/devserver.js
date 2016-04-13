@@ -32,6 +32,6 @@ new WebpackDevServer(webpack(config), options)
         console.log('Webpack server listening on: http://localhost:3001');
 
         // Start the actual server.
-        require('../../server');
+        require('../../server')();
       }
     });

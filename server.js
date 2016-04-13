@@ -8,78 +8,80 @@ const request = require('request');
 const metadata = require('./webtask.json');
 const htmlRoute = require('./htmlRoute');
 
-nconf
-  .argv()
-  .env()
-  .file(path.join(__dirname, './config.json'))
-  .defaults({
-    NODE_ENV: 'development'
+module.exports = () => {
+  nconf
+    .argv()
+    .env()
+    .file(path.join(__dirname, './config.json'))
+    .defaults({
+      NODE_ENV: 'development'
+    });
+
+  const app = express();
+
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: false }));
+
+  app.use('/meta', (req, res) => {
+    res.status(200).send(metadata);
   });
 
-const app = express();
+  app.post('/users-import', (req, res) => {
+    var sent = false;
+    const opt = {
+      url: `https://${nconf.get('AUTH0_DOMAIN')}/api/v2/jobs/users-imports`,
+      headers: {
+        Authorization: req.headers['x-authorization']
+      }
+    };
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+    const post = request.post(opt, (err, response, body) => {
+      if (sent) {
+        return null;
+      }
+      sent = true;
 
-app.use('/meta', (req, res) => {
-  res.status(200).send(metadata);
-});
+      if (err) {
+        res.status(400);
+        return res.json({ error: err && err.message || body });
+      }
 
-app.post('/users-import', (req, res) => {
-  var sent = false;
-  const opt = {
-    url: `https://${nconf.get('AUTH0_DOMAIN')}/api/v2/jobs/users-imports`,
-    headers: {
-      Authorization: req.headers['x-authorization']
-    }
-  };
+      res.status(response.statusCode);
+      return res.json(body);
+    });
 
-  const post = request.post(opt, (err, response, body) => {
-    if (sent) {
-      return null;
-    }
-    sent = true;
-
-    if (err) {
+    try {
+      const form = post.form();
+      form.append('users', JSON.stringify(JSON.parse(req.body.users), null, 2), { filename: 'file.json', contentType: 'text/plain' });
+      form.append('connection_id', req.body.connection_id);
+    } catch (e) {
+      if (sent) {
+        return;
+      }
+      sent = true;
       res.status(400);
-      return res.json({ error: err && err.message || body });
+      res.json({ error: e.message });
     }
-
-    res.status(response.statusCode);
-    return res.json(body);
   });
 
-  try {
-    const form = post.form();
-    form.append('users', JSON.stringify(JSON.parse(req.body.users), null, 2), { filename: 'file.json', contentType: 'text/plain' });
-    form.append('connection_id', req.body.connection_id);
-  } catch (e) {
-    if (sent) {
-      return;
-    }
-    sent = true;
-    res.status(400);
-    res.json({ error: e.message });
+  app.use(auth0({
+    scopes: 'create:users read:users read:connections',
+    clientName: 'User Import / Export Extension'
+  }));
+
+  app.get('*', htmlRoute());
+
+  const port = process.env.PORT || 3000;
+
+  if ((process.env.NODE_ENV || 'development') === 'development') {
+    app.listen(port, (error) => {
+      if (error) {
+        console.error(error);
+      } else {
+        console.log(`Listening on http://localhost:${port}.`);
+      }
+    });
   }
-});
 
-app.use(auth0({
-  scopes: 'create:users read:users read:connections',
-  clientName: 'User Import / Export Extension'
-}));
-
-app.get('*', htmlRoute());
-
-const port = process.env.PORT || 3000;
-
-if ((process.env.NODE_ENV || 'development') === 'development') {
-  app.listen(port, (error) => {
-    if (error) {
-      console.error(error);
-    } else {
-      console.log(`Listening on http://localhost:${port}.`);
-    }
-  });
-} else {
-  module.exports = app;
-}
+  return app;
+};

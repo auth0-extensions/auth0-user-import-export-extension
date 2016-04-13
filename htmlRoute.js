@@ -44,7 +44,7 @@ module.exports = () => {
         host: req.get('host'),
         pathname: url.parse(req.originalUrl || '').pathname.replace(req.path, '')
       }),
-      BASE_PATH: url.parse(req.originalUrl || '').pathname.replace(req.path, '')
+      BASE_PATH: '/' + url.parse(req.originalUrl || '').pathname.replace(req.path, '')
     };
 
     // Render from CDN.
