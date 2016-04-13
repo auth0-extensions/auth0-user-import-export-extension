@@ -12,7 +12,7 @@ export default class ExportContainer extends Component {
 
   onExport = () => {
     const { query, settings } = this.props.export.toJS();
-    this.props.exportUsers(query.filter, settings);
+    this.props.exportUsers(query.filter || '', settings);
   }
 
   onDownload = () => {
