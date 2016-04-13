@@ -19,7 +19,14 @@ const reduxHistory = syncHistoryWithStore(history, store);
 
 // Fire first events.
 const accessToken = sessionStorage.getItem('token');
-axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+axios.interceptors.request.use(function (config) {
+	if (config.url.indexOf(window.config.AUTH0_DOMAIN) > 0) {
+		config.headers.Authorization = `Bearer ${accessToken}`;
+	} else if (config.url.indexOf(window.config.BASE_URL) === 0) {
+		config.headers['X-Authorization'] = `Bearer ${accessToken}`;
+	}
+	return config;
+});
 store.dispatch(authActions.login(accessToken));
 
 // Render application.

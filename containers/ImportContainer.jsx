@@ -20,6 +20,9 @@ export default class ImportContainer extends Component {
 
   componentWillMount() {
     this.props.fetchConnections();
+    setInterval(() => {
+      this.props.probeImportStatus()
+    }, 1000);
   }
 
   onDrop(newFiles) {

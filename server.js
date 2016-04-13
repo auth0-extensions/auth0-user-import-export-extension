@@ -17,10 +17,6 @@ nconf
   });
 
 const app = express();
-app.use(auth0({
-  scopes: 'create:users read:users read:connections',
-  clientName: 'User Import / Export Extension'
-}));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -33,7 +29,7 @@ app.post('/users-import', (req, res) => {
   const opt = {
     url: `https://${nconf.get('AUTH0_DOMAIN')}/api/v2/jobs/users-imports`,
     headers: {
-      Authorization: req.headers['Authorization']
+      Authorization: req.headers['x-authorization']
     }
   };
 
@@ -50,6 +46,11 @@ app.post('/users-import', (req, res) => {
   form.append('users', req.body.data.users, { filename: 'file.json', contentType: 'text/plain' });
   form.append('connection_id', req.body.data.connection_id);
 });
+
+app.use(auth0({
+  scopes: 'create:users read:users read:connections',
+  clientName: 'User Import / Export Extension'
+}));
 
 app.get('*', htmlRoute());
 

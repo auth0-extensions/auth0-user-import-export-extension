@@ -4,14 +4,21 @@ import * as constants from '../constants';
 /*
  * Get the status of a job.
  */
-export function probeImportStatus(job) {
-  return {
-    type: constants.PROBE_IMPORT_STATUS,
-    payload: {
-      promise: axios.get(`https://${window.config.AUTH0_DOMAIN}/api/v2/jobs/${job.id}`, {
-        timeout: 10000,
-        responseType: 'json'
-      })
+export function probeImportStatus() {
+  return (dispatch, getState) => {
+    console.log(getState().import.toJS())
+    const currentJob = getState().import.toJS().currentJob;
+
+    if (currentJob && currentJob.id) {
+      dispatch({
+        type: constants.PROBE_IMPORT_STATUS,
+        payload: {
+          promise: axios.get(`https://${window.config.AUTH0_DOMAIN}/api/v2/jobs/${currentJob.id}`, {
+            timeout: 10000,
+            responseType: 'json'
+          })
+        }
+      });
     }
   };
 }
@@ -38,11 +45,10 @@ export function importUsers(formData, jobIndex) {
       }
     });
 
-    console.log('XXXXX', formData);
     dispatch({
       type: constants.IMPORT_USERS,
       payload: {
-        promise: axios.post('/users-import', {
+        promise: axios.post(`${window.config.BASE_URL}/users-import`, {
           data: formData,
           timeout: 5000,
           responseType: 'json'
