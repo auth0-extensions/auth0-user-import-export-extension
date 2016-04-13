@@ -1,12 +1,12 @@
 {
   "title": "User Import / Export",
   "name": "auth0-user-import-export",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "author": "auth0",
   "description": "This extension allows you to import/export users from/to your account.",
   "type": "application",
   "logoUrl": "https://cdn.auth0.com/extensions/auth0-user-import-export-extension/assets/logo.svg",
-  "initialUrlPath": "/admins/login",
+  "initialUrlPath": "/login",
   "repository": "https://github.com/auth0/auth0-user-import-export-extension",
   "keywords": [
     "auth0",

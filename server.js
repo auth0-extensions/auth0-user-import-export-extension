@@ -29,7 +29,7 @@ app.use(auth0({
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.use('/meta', (req, res) => {
+app.get('/meta', (req, res) => {
   res.status(200).send(metadata);
 });
 
