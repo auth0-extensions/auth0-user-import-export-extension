@@ -37,7 +37,9 @@ const initialState = {
     started: false,
     complete: false,
     total: 0,
-    current: 0
+    current: 0,
+    items: [ ],
+    error: null
   }
 };
 
@@ -94,6 +96,7 @@ export const exportReducer = createReducer(fromJS(initialState), {
   [constants.EXPORT_USERS_STARTED]: (state) =>
     state.merge({
       process: {
+        error: null,
         started: true,
         complete: false,
         current: 0
@@ -113,13 +116,29 @@ export const exportReducer = createReducer(fromJS(initialState), {
         current: action.payload.count
       }
     }),
-  [constants.EXPORT_USERS_PROGRESS]: (state, action) =>
+  [constants.EXPORT_USERS_COMPLETE]: (state, action) =>
     state.merge({
       process: {
         started: true,
         complete: true,
-        current: action.payload.count,
+        current: state.get('process').get('current'),
         items: action.payload.items
+      }
+    }),
+  [constants.EXPORT_USERS_REJECTED]: (state, action) =>
+    state.merge({
+      process: {
+        started: true,
+        current: state.get('process').get('current'),
+        error: action.payload.error.message || action.payload.error.message
+      }
+    }),
+  [constants.SAVE_USERS_REJECTED]: (state, action) =>
+    state.merge({
+      process: {
+        started: true,
+        current: state.get('process').get('current'),
+        error: action.payload.error
       }
     })
 });

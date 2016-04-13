@@ -22,8 +22,9 @@ class ExportProgressDialog extends Component {
     const onDownload = data.process.complete ? this.props.onDownload : null;
 
     return (
-      <Confirm confirmMessage={'Download'} size="large" title={title} show={data.process.started} loading={false} onCancel={this.props.onClose} onConfirm={onDownload}>
+      <Confirm confirmMessage={'Download'} size="large" title={title} show={data.process.started} loading={false} onCancel={this.props.onClose} onConfirm={onDownload}>
          <ProgressBar active={percentage !== 100} now={percentage} label={`${data.process.current} of ${data.query.size}`} />
+         <Error message={data.process.error} />
       </Confirm>
     );
   }

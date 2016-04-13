@@ -4,7 +4,7 @@ import CSV from 'comma-separated-values';
 const map = (columns, data) => data.map(record => {
   const mappedRecord = { };
   columns.forEach(c => {
-    mappedRecord[c.columnName] = new Function('user', 'return ' + c.userAttribute)(record);
+    mappedRecord[c.columnName] = new Function('user', 'return ' + c.userAttribute + ' || \'\'')(record);
   });
   return mappedRecord;
 });

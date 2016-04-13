@@ -47,7 +47,6 @@ export function getUserCount(query = '') {
     type: constants.FETCH_USER_COUNT,
     payload: {
       promise: axios.get(`https://${window.config.AUTH0_DOMAIN}/api/v2/users?per_page=1&page=1&include_totals=true&search_engine=v2&q=${encodeURIComponent(query)}`, {
-        timeout: 5000,
         responseType: 'json'
       })
     }
@@ -62,7 +61,6 @@ function downloadUsers(settings, query, page = 1) {
 
   return axios
     .get(`${url}&q=${encodeURIComponent(query)}`, {
-      timeout: 5000,
       responseType: 'json'
     })
     .then(res => {
@@ -76,17 +74,26 @@ function downloadUsers(settings, query, page = 1) {
 export function closeExportDialog() {
   return {
     type: constants.CLOSE_EXPORT_DIALOG
-  }
+  };
 }
 
 export function downloadUsersToFile(settings, columns, defaultColumns, items) {
-  if (settings.format === 'json') {
-    toJSON('export.json', columns, items);
-  } else {
-    toCSV('export.csv', columns && columns.length ? columns : defaultColumns, items);
-  }
+  try {
+    if (settings.format === 'json') {
+      toJSON('export.json', columns, items);
+    } else {
+      toCSV('export.csv', columns && columns.length ? columns : defaultColumns, items);
+    }
 
-  return closeExportDialog();
+    return closeExportDialog();
+  } catch (e) {
+    return {
+      type: constants.SAVE_USERS_REJECTED,
+      payload: {
+        error: `Mapping failed: ${e.message}. Please review your user attributes for possible errors.`
+      }
+    };
+  }
 }
 
 export function exportUsers(query, settings) {
