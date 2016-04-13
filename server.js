@@ -3,7 +3,7 @@ const nconf = require('nconf');
 const express = require('express');
 const bodyParser = require('body-parser');
 const auth0 = require('auth0-oauth2-express');
-const axios = require('axios');
+const request = require('request');
 const Readable = require('stream').Readable;
 
 const metadata = require('./webtask.json');
@@ -18,7 +18,7 @@ nconf
   });
 
 const idToken = '';
-axios.defaults.headers.common.Authorization = `Bearer ${idToken}`;
+const defaultHeaders = { 'Authorization': `Bearer ${idToken}` };
 
 const app = express();
 app.use(auth0({
@@ -29,28 +29,27 @@ app.use(auth0({
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.get('/meta', (req, res) => {
+app.use('/meta', (req, res) => {
   res.status(200).send(metadata);
 });
 
 app.post('/users-import', (req, res) => {
   var file = new Readable();
-  file.push(req.body.users);
+  file.push(req.body.data.users);
   file.push(null);
-  var formData = {
-    connection_id: req.body.connection_id,
-    users: file
-  };
-  axios.post(`https://${nconf.get('AUTH0_DOMAIN')}/api/v2/jobs/users-imports`, formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-    timeout: 50000,
-    responseType: 'json'
-  }).then(function (response) {
-    res.status(response.status).send(response.data);
-  }).catch(function (response) {
-    console.log(response);
-    res.status(response.status).send(response.data && response.data.message || response.statusText);
+  var postRequest = request.post({
+    url: `https://${nconf.get('AUTH0_DOMAIN')}/api/v2/jobs/users-imports`,
+    headers: defaultHeaders
+  }, function (err, response, body) {
+    console.log(err, response, body);
+    if (err) {
+      console.log(err, response, body);
+    }
+    res.status(response.statusCode).send(body);
   });
+  var form = postRequest.form();
+  form.append('users', file);
+  form.append('connection_id', req.body.data.connection_id);
 });
 
 app.get('*', htmlRoute());
@@ -66,5 +65,5 @@ if ((process.env.NODE_ENV || 'development') === 'development') {
     }
   });
 } else {
-  module.exports = app;
+  module.exports = Webtask.fromExpress(app);
 }
