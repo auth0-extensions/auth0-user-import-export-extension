@@ -66,6 +66,7 @@ export default class ImportContainer extends Component {
   }
 
   renderFiles(error, loading, files) {
+    let status = {'pending': 'Pending', 'failed': 'Failed (see email)', 'completed': 'Completed'};
     let colors = {'pending': 'orange', 'failed': 'red', 'completed': 'green'};
 
     return (
@@ -81,7 +82,7 @@ export default class ImportContainer extends Component {
             <TableTextCell>{file.name}</TableTextCell>
             <TableTextCell>
               <span style={{ color: colors[file.status] }}>
-                {file.status}
+                {status[file.status]}
               </span>
             </TableTextCell>
             <TableCell>
@@ -100,8 +101,8 @@ export default class ImportContainer extends Component {
   renderConnectionChooser() {
     const connections = this.props.connections;
     return <label>
-      Connection ID
-      <select name='connection_id' id='connection-id' className='form-control' style={{ marginLeft: '5px', display: 'inline-block', maxWidth: '255px' }}>
+      <select defaultValue="" name='connection_id' id='connection-id' className='form-control' style={{ width: '300px', marginLeft: '5px', display: 'inline-block', maxWidth: '300px' }}>
+        <option value="" disabled>Please select a database connection</option>
       {connections.map((conn, index) =>
         <option value={conn.get('id')}>{conn.get('name')}</option>
       )}
