@@ -9,13 +9,15 @@ const metadata = require('./webtask.json');
 const htmlRoute = require('./htmlRoute');
 
 module.exports = () => {
-  nconf
-    .argv()
-    .env()
-    .file(path.join(__dirname, './config.json'))
-    .defaults({
-      NODE_ENV: 'development'
-    });
+  if ((process.env.NODE_ENV || 'development') === 'development') {
+    nconf
+      .argv()
+      .env()
+      .file(path.join(__dirname, './config.json'))
+      .defaults({
+        NODE_ENV: 'development'
+      });
+  }
 
   const app = express();
 

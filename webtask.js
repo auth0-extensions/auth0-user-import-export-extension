@@ -5,13 +5,27 @@ var server = null;
 
 module.exports = webtask.fromExpress((req, res) => {
   if (!server) {
-    nconf.defaults({
+    console.log('Creating server.');
+    console.log(' > Environment:', process.env);
+    console.log(' > Secrets:', {
       AUTH0_DOMAIN: req.webtaskContext.secrets.AUTH0_DOMAIN,
       AUTH0_SCOPES: req.webtaskContext.secrets.AUTH0_SCOPES,
       NODE_ENV: 'production',
       HOSTING_ENV: 'webtask',
-      CLIENT_VERSION: process.env.CLIENT_VERSION
+      CLIENT_VERSION: CLIENT_VERSION
     });
+
+    // Initialize config.
+    nconf
+      .env()
+      .argv()
+      .overrides({
+        AUTH0_DOMAIN: req.webtaskContext.secrets.AUTH0_DOMAIN,
+        AUTH0_SCOPES: req.webtaskContext.secrets.AUTH0_SCOPES,
+        NODE_ENV: 'production',
+        HOSTING_ENV: 'webtask',
+        CLIENT_VERSION: CLIENT_VERSION
+      });
 
     // Start the server.
     const initServer = require('./server');

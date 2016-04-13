@@ -71,6 +71,7 @@ module.exports = {
       }
     }),
     new Webpack.DefinePlugin({
+      CLIENT_VERSION: JSON.stringify(project.version),
       'process.env': {
         NODE_ENV: JSON.stringify('production'),
         CLIENT_VERSION: JSON.stringify(project.version)
