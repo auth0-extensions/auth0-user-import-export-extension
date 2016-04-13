@@ -6,7 +6,6 @@ import * as constants from '../constants';
  */
 export function probeImportStatus() {
   return (dispatch, getState) => {
-    console.log(getState().import.toJS())
     const currentJob = getState().import.toJS().currentJob;
 
     if (currentJob && currentJob.id) {
@@ -14,7 +13,6 @@ export function probeImportStatus() {
         type: constants.PROBE_IMPORT_STATUS,
         payload: {
           promise: axios.get(`https://${window.config.AUTH0_DOMAIN}/api/v2/jobs/${currentJob.id}`, {
-            timeout: 10000,
             responseType: 'json'
           })
         }
@@ -48,9 +46,7 @@ export function importUsers(formData, jobIndex) {
     dispatch({
       type: constants.IMPORT_USERS,
       payload: {
-        promise: axios.post(`${window.config.BASE_URL}/users-import`, {
-          data: formData,
-          timeout: 5000,
+        promise: axios.post(`${window.config.BASE_URL}/users-import`, { users: formData.users, connection_id: formData.connection_id }, {
           responseType: 'json'
         })
       }
@@ -86,7 +82,7 @@ export function removeFile(fileList, index) {
   return {
     type: constants.REMOVE_FILE,
     payload: {
-      files: files
+      files
     }
   };
 }
@@ -117,7 +113,7 @@ export function handleFileDrop(currentFiles, newFiles) {
       type: constants.IMPORT_USERS_VALIDATION_FAILED,
       payload: {
         validationErrors: errors,
-        files: files
+        files
       }
     };
   }
@@ -125,7 +121,7 @@ export function handleFileDrop(currentFiles, newFiles) {
   return {
     type: constants.DROPPED_FILES,
     payload: {
-      files: files
+      files
     }
   };
 }

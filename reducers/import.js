@@ -16,7 +16,6 @@ const initialState = {
 export const importReducer = createReducer(fromJS(initialState), {
   [constants.IMPORT_USERS_PENDING]: (state, action) =>
     state.merge({
-      currentJob: null,
       loading: true,
       error: null
     }),

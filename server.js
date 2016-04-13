@@ -26,6 +26,7 @@ app.use('/meta', (req, res) => {
 });
 
 app.post('/users-import', (req, res) => {
+  var sent = false;
   const opt = {
     url: `https://${nconf.get('AUTH0_DOMAIN')}/api/v2/jobs/users-imports`,
     headers: {
@@ -34,17 +35,32 @@ app.post('/users-import', (req, res) => {
   };
 
   const post = request.post(opt, (err, response, body) => {
+    if (sent) {
+      return null;
+    }
+    sent = true;
+
     if (err) {
       res.status(400);
       return res.json({ error: err && err.message || body });
     }
 
-    return res.status(response.statusCode).send(body);
+    res.status(response.statusCode);
+    return res.json(body);
   });
 
-  const form = post.form();
-  form.append('users', req.body.data.users, { filename: 'file.json', contentType: 'text/plain' });
-  form.append('connection_id', req.body.data.connection_id);
+  try {
+    const form = post.form();
+    form.append('users', JSON.stringify(req.body.users, null, 2), { filename: 'file.json', contentType: 'text/plain' });
+    form.append('connection_id', req.body.connection_id);
+  } catch (e) {
+    if (sent) {
+      return;
+    }
+    sent = true;
+    res.status(400);
+    res.json({ error: e.message });
+  }
 });
 
 app.use(auth0({
