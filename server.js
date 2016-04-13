@@ -51,7 +51,7 @@ app.post('/users-import', (req, res) => {
 
   try {
     const form = post.form();
-    form.append('users', JSON.stringify(req.body.users, null, 2), { filename: 'file.json', contentType: 'text/plain' });
+    form.append('users', JSON.stringify(JSON.parse(req.body.users), null, 2), { filename: 'file.json', contentType: 'text/plain' });
     form.append('connection_id', req.body.connection_id);
   } catch (e) {
     if (sent) {
