@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { push } from 'react-router-redux';
 import { authActions } from './actions';
 import { Provider } from 'react-redux';
 import { createHistory } from 'history';
@@ -28,6 +29,7 @@ axios.interceptors.request.use(function (config) {
 	return config;
 });
 store.dispatch(authActions.login(accessToken));
+store.dispatch(push('/import'));
 
 // Render application.
 ReactDOM.render(
