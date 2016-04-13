@@ -37,6 +37,7 @@ module.exports = () => {
 
   return (req, res, next) => {
     const config = {
+      CLIENT_VERSION: nconf.get('CLIENT_VERSION') || '???',
       AUTH0_DOMAIN: nconf.get('AUTH0_DOMAIN'),
       BASE_URL: url.format({
         protocol: nconf.get('NODE_ENV') !== 'production' ? 'http' : 'https',
