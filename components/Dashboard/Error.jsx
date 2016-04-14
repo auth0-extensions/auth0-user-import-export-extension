@@ -14,10 +14,10 @@ class Error extends Component {
     }
 
     var errors = '';
-    if (this.props.errors && this.props.errors.length > 0) {
+    if (this.props.errors && this.props.errors.size > 0) {
       errors = (<ul>
       {this.props.errors.map((err, index) =>
-        <li>{err}</li>
+        <li key={err}>{err}</li>
       )}
       </ul>);
     }

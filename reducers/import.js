@@ -1,4 +1,3 @@
-import moment from 'moment';
 import { fromJS } from 'immutable';
 
 import * as constants from '../constants';
@@ -9,12 +8,22 @@ const initialState = {
   files: [],
   error: null,
   validationErrors: [],
+  connectionId: null,
   currentJob: null,
   currentJobIndex: -1
 };
 
 export const importReducer = createReducer(fromJS(initialState), {
-  [constants.IMPORT_USERS_PENDING]: (state, action) =>
+  [constants.DROPPED_FILES]: (state, action) =>
+  state.merge({
+    loading: false,
+    files: action.payload.files
+  }),
+  [constants.REMOVE_FILE]: (state, action) =>
+  state.merge({
+    files: action.payload.files
+  }),
+  [constants.IMPORT_USERS_PENDING]: (state) =>
     state.merge({
       loading: true,
       error: null
@@ -22,34 +31,37 @@ export const importReducer = createReducer(fromJS(initialState), {
   [constants.IMPORT_USERS_REJECTED]: (state, action) =>
     state.merge({
       loading: false,
-      error: `An error occured while importing users: ${action.payload.message || action.payload.statusText}`
+      error: `An error occured while uploading the file: ${action.payload.message || action.payload.statusText}`
     }),
   [constants.IMPORT_USERS_FULFILLED]: (state, action) => {
-    let currentJob = fromJS(action.payload.data);
-    let currentJobIndex = state.get('currentJobIndex');
-    let updatedFiles = [];
+    const updatedFiles = [];
+    const currentJob = fromJS(action.payload.data);
+    const currentJobIndex = state.get('currentJobIndex');
     let loading = true;
     let newCurrentJob = null;
-    state.get('files').map((file, index) => {
+    state.get('files').toJS().map((file, index) => {
       if (currentJob && currentJobIndex > -1 && index === currentJobIndex) {
         loading = false;
         file.status = currentJob.get('status');
         file.id = currentJob.get('id');
         newCurrentJob = file;
-        updatedFiles.push(file);
       }
+
+      updatedFiles.push(file);
     });
+
     return state.merge({
-      loading: loading,
-      files: updatedFiles,
-      currentJob: newCurrentJob
+      loading,
+      files: fromJS(updatedFiles),
+      currentJob: fromJS(newCurrentJob),
+      currentJobIndex: -1
     });
   },
-  [constants.CANCEL_IMPORT]: (state, action) =>
+  [constants.CANCEL_IMPORT]: (state) =>
     state.merge({
       ...initialState
     }),
-  [constants.CLEAR_IMPORT]: (state, action) =>
+  [constants.CLEAR_IMPORT]: (state) =>
     state.merge({
       ...initialState
     }),
@@ -65,21 +77,12 @@ export const importReducer = createReducer(fromJS(initialState), {
       files: action.payload.files,
       error: 'Validation error'
     }),
-  [constants.DROPPED_FILES]: (state, action) =>
-    state.merge({
-      loading: false,
-      files: action.payload.files
-    }),
-  [constants.REMOVE_FILE]: (state, action) =>
-    state.merge({
-      files: action.payload.files
-    }),
-  [constants.DISMISS_ERROR]: (state, action) =>
+  [constants.DISMISS_ERROR]: (state) =>
     state.merge({
       error: null,
       validationErrors: []
     }),
-  [constants.PROBE_IMPORT_STATUS_PENDING]: (state, action) =>
+  [constants.PROBE_IMPORT_STATUS_PENDING]: (state) =>
     state.merge({
       loading: true,
       error: null,
@@ -91,27 +94,27 @@ export const importReducer = createReducer(fromJS(initialState), {
       error: `An error occured while trying to get the status of the import job: ${action.payload.message || action.payload.statusText}`
     }),
   [constants.PROBE_IMPORT_STATUS_FULFILLED]: (state, action) => {
-    let job = fromJS(action.payload.data);
-    let currentJob = state.get('currentJob');
-    currentJob.status = job.get('status');
+    const job = fromJS(action.payload.data);
 
-    let currentJobIndex = state.get('currentJobIndex');
-    let updatedFiles = [];
-    state.get('files').map((file, index) => {
-      if (index === currentJobIndex) {
+    const updatedFiles = [];
+    const currentJobIndex = state.get('currentJobIndex');
+    state.get('files').toJS().map((file) => {
+      if (file.id === action.meta.currentJobId) {
         file.status = job.get('status');
-        updatedFiles.push(file);
       }
+      updatedFiles.push(file);
     });
+
     return state.merge({
       loading: false,
-      files: updatedFiles,
+      files: fromJS(updatedFiles),
       currentJob: null,
       currentJobIndex: -1
     });
   },
   [constants.SET_CURRENT_JOB]: (state, action) =>
     state.merge({
+      connectionId: action.payload.connectionId,
       currentJob: fromJS(action.payload.currentJob),
       currentJobIndex: fromJS(action.payload.currentJobIndex)
     })
