@@ -40,7 +40,7 @@ module.exports = () => {
       CLIENT_VERSION: nconf.get('CLIENT_VERSION') || '???',
       AUTH0_DOMAIN: nconf.get('AUTH0_DOMAIN'),
       BASE_URL: url.format({
-        protocol: nconf.get('NODE_ENV') !== 'production' ? 'http' : 'https',
+        protocol: (nconf.get('NODE_ENV') === 'production' || nconf.get('HOSTING_ENV') === 'webtask') ? 'https' : 'http',
         host: req.get('host'),
         pathname: url.parse(req.originalUrl || '').pathname.replace(req.path, '')
       }),
