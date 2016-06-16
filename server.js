@@ -68,7 +68,8 @@ module.exports = () => {
 
   app.use(auth0({
     scopes: 'create:users read:users read:connections',
-    clientName: 'User Import / Export Extension'
+    clientName: 'User Import / Export Extension',
+    audience: (req) => `https://${req.webtaskContext.data.AUTH0_DOMAIN}/api/v2/`
   }));
 
   app.get('*', htmlRoute());

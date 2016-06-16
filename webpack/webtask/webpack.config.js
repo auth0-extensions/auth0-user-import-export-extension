@@ -47,7 +47,8 @@ module.exports = {
     'jsonwebtoken': 'commonjs jsonwebtoken',
     'debug': 'commonjs debug',
     'body-parser': 'commonjs body-parser',
-    'mime-types': 'commonjs mime-types'
+    'mime-types': 'commonjs mime-types',
+    'webtask-tools': 'commonjs webtask-tools'
   },
   module: {
     loaders: [
