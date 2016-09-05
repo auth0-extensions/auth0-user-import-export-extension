@@ -7,7 +7,7 @@
   "type": "application",
   "logoUrl": "https://cdn.rawgit.com/auth0/auth0-user-import-export-extension/master/assets/logo.svg",
   "initialUrlPath": "/login",
-  "repository": "https://github.com/auth0/auth0-user-import-export-extension",
+  "repository": "https://github.com/zxan1285/auth0-user-import-export-extension-test",
   "keywords": [
     "auth0",
     "extension"
