@@ -6,7 +6,7 @@ import { ImportFiles, ImportDropFiles } from '../components';
 import { connectionActions, importActions } from '../actions';
 import { Error, LoadingPanel } from '../components/Dashboard';
 
-export default class ImportContainer extends Component {
+export class ImportContainer extends Component {
   componentWillMount() {
     this.props.fetchConnections();
     this.probeInterval = setInterval(this.props.probeImportStatus, 5000);
