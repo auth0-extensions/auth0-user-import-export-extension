@@ -1,13 +1,13 @@
 {
-  "title": "User Import / Export test",
-  "name": "auth0-user-import-export-test",
+  "title": "User Import / Export",
+  "name": "auth0-user-import-export",
   "version": "1.4.2",
   "author": "auth0",
   "description": "This extension allows you to import/export users from/to your account.",
   "type": "application",
   "logoUrl": "https://cdn.rawgit.com/auth0/auth0-user-import-export-extension/master/assets/logo.svg",
   "initialUrlPath": "/login",
-  "repository": "https://github.com/zxan1285/auth0-user-import-export-extension",
+  "repository": "https://github.com/auth0/auth0-user-import-export-extension",
   "keywords": [
     "auth0",
     "extension"
