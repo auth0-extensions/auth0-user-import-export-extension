@@ -66,11 +66,14 @@ module.exports = () => {
     }
   });
 
-  app.use(auth0({
-    scopes: 'create:users read:users read:connections',
-    clientName: 'User Import / Export Extension',
-    audience: (req) => `https://${req.webtaskContext.data.AUTH0_DOMAIN}/api/v2/`
-  }));
+  app.use((req, res, next) => {
+    auth0({
+      scopes: 'create:users read:users read:connections',
+      clientName: 'User Import / Export Extension',
+      audience: (req) => `https://${req.webtaskContext.data.AUTH0_DOMAIN}/api/v2/`,
+      rootTenantAuthority: req.webtaskContext.data.AUTH0_RTA
+    })(req, res, next);
+  });
 
   app.get('*', htmlRoute());
 
