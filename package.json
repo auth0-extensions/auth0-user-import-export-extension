@@ -98,14 +98,13 @@
     "webtask-bundle": "^2.1.1"
   },
   "scripts": {
-    "clean": "rimraf build",
-    "client:build": "npm run clean && cross-env NODE_ENV=production webpack --config ./build/ui/webpack.config.prod.js --colors -p",
+    "client:build": "cross-env NODE_ENV=production webpack --config ./build/ui/webpack.config.prod.js --colors -p",
     "serve:dev": "cross-env NODE_ENV=development gulp run --gulpfile ./build/gulpfile.js",
     "serve:prod": "cross-env NODE_ENV=production node index.js",
     "postinstall": "npm run client:build",
     "extension:build": "webpack -p --config ./build/webtask/webpack.config.js",
     "extension:size": "cross-env NODE_ENV=production webpack -p --config ./build/webtask/webpack.config.js --json > ./build/webtask/bundle-size.json && node ./build/webtask/bundle-size.js",
-    "build": "npm run clean && npm run client:build && npm run extension:build"
+    "build": "npm run client:build && npm run extension:build"
   },
   "repository": {
     "type": "git",

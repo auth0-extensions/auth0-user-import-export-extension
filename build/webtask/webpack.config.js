@@ -4,7 +4,7 @@ const Webpack = require('webpack');
 const project = require('../../package.json');
 
 module.exports = {
-  entry: path.join(__dirname, '../build'),
+  entry: path.join(__dirname, '../../webtask.js'),
   target: 'node',
   output: {
     path: './build',
