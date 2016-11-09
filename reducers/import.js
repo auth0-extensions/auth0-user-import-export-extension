@@ -23,15 +23,18 @@ export const importReducer = createReducer(fromJS(initialState), {
   state.merge({
     files: action.payload.files
   }),
-  [constants.IMPORT_USERS_PENDING]: (state) =>
+  [constants.IMPORT_USERS_PENDING]: state =>
     state.merge({
       loading: true,
       error: null
     }),
   [constants.IMPORT_USERS_REJECTED]: (state, action) =>
     state.merge({
+      currentJob: null,
+      currentJobIndex: -1,
       loading: false,
-      error: `An error occured while uploading the file: ${action.payload.message || action.payload.statusText}`
+      error: 'An error occured while uploading the file: ' +
+        `${action.payload.message === 'Network Error' ? 'Verify the size of your upload and make sure the connection is enabled.' : (action.payload.message || action.payload.statusText)}`
     }),
   [constants.IMPORT_USERS_FULFILLED]: (state, action) => {
     const updatedFiles = [];
@@ -57,11 +60,11 @@ export const importReducer = createReducer(fromJS(initialState), {
       currentJobIndex: -1
     });
   },
-  [constants.CANCEL_IMPORT]: (state) =>
+  [constants.CANCEL_IMPORT]: state =>
     state.merge({
       ...initialState
     }),
-  [constants.CLEAR_IMPORT]: (state) =>
+  [constants.CLEAR_IMPORT]: state =>
     state.merge({
       ...initialState
     }),
@@ -77,12 +80,13 @@ export const importReducer = createReducer(fromJS(initialState), {
       files: action.payload.files,
       error: 'Validation error'
     }),
-  [constants.DISMISS_ERROR]: (state) =>
+  [constants.DISMISS_ERROR]: state =>
     state.merge({
+      loading: false,
       error: null,
       validationErrors: []
     }),
-  [constants.PROBE_IMPORT_STATUS_PENDING]: (state) =>
+  [constants.PROBE_IMPORT_STATUS_PENDING]: state =>
     state.merge({
       loading: true,
       error: null,

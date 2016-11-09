@@ -123,7 +123,7 @@ export function removeFile(fileList, index) {
   const files = [];
   for (let i = 0; i < fileList.length; i++) {
     if (i !== index) {
-      files.push(fileList.get(i));
+      files.push(fileList[i]);
     }
   }
   return {

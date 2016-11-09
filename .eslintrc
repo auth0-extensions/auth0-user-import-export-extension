@@ -12,6 +12,7 @@
   },
   "parser": "babel-eslint",
   "rules": {
+    "jsx-a11y/anchor-has-conten": 0,
     "max-len": 0,
     "react/display-name": 0,
     "array-bracket-spacing": [2, "always"],
@@ -35,6 +36,7 @@
     }]
   },
   "plugins": [
+    "jsx-a11y",
     "react",
     "babel"
   ]
