@@ -46,6 +46,10 @@ export function importUsers(files, connectionId) {
       fileReader.addEventListener('load', (event) => {
         formData.users = event.currentTarget.result;
 
+        const data = new FormData();
+        data.append('connection_id', connectionId);
+        data.append('users', new Blob([ event.currentTarget.result ], { type: 'application/json' }));
+
         dispatch({
           type: constants.SET_CURRENT_JOB,
           payload: {
@@ -58,7 +62,7 @@ export function importUsers(files, connectionId) {
         dispatch({
           type: constants.IMPORT_USERS,
           payload: {
-            promise: axios.post(`${window.config.BASE_URL}/users-import`, { users: formData.users, connection_id: formData.connection_id }, {
+            promise: axios.post(`https://sandrino.auth0.com/api/v2/jobs/users-imports`, data, {
               responseType: 'json'
             })
           }

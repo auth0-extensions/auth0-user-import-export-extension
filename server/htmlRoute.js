@@ -62,7 +62,7 @@ module.exports = () => {
     return res.send(ejs.render(template, {
       config,
       assets: {
-        app: '/app/bundle.js'
+        app: 'http://localhost:3001/app/bundle.js'
       }
     }));
   };
