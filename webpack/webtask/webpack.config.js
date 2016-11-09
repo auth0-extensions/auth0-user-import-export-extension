@@ -14,6 +14,7 @@ module.exports = {
   },
   externals: {
     'async': 'commonjs async',
+    'auth0': 'commonjs auth0@2.1.0',
     'aws-sdk': 'commonjs aws-sdk',
     'aws-sign2': 'commonjs aws-sign2',
     'bluebird': 'commonjs bluebird',
@@ -40,7 +41,6 @@ module.exports = {
     'type-check': 'commonjs type-check',
     'winston': 'commonjs winston',
     'xml2js': 'commonjs xml2js',
-    'auth0': 'commonjs auth0',
     'nconf': 'commonjs nconf',
     'node-uuid': 'commonjs node-uuid',
     'jade': 'commonjs jade',

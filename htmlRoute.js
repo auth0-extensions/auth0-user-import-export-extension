@@ -1,6 +1,6 @@
 const ejs = require('ejs');
-const url = require('url');
 const nconf = require('nconf');
+const urlHelpers = require('auth0-extension-express-tools').urlHelpers;
 
 module.exports = () => {
   const template = `
@@ -35,21 +35,17 @@ module.exports = () => {
     </html>
   `;
 
-  return (req, res, next) => {
+  return (req, res) => {
     const config = {
       HOSTING_ENV: nconf.get('HOSTING_ENV'),
       CLIENT_VERSION: nconf.get('CLIENT_VERSION') || '???',
       AUTH0_DOMAIN: nconf.get('AUTH0_DOMAIN'),
-      BASE_URL: url.format({
-        protocol: (nconf.get('NODE_ENV') === 'production' || nconf.get('HOSTING_ENV') === 'webtask') ? 'https' : 'http',
-        host: req.get('host'),
-        pathname: url.parse(req.originalUrl || '').pathname.replace(req.path, '')
-      }),
-      BASE_PATH: url.parse(req.originalUrl || '').pathname.replace(req.path, '')
+      BASE_URL: urlHelpers.getBaseUrl(req),
+      BASE_PATH: urlHelpers.getBasePath(req)
     };
 
     if (config.BASE_PATH.indexOf('/') !== 0) {
-      config.BASE_PATH = '/' + config.BASE_PATH;
+      config.BASE_PATH = `/${config.BASE_PATH}`;
     }
 
     // Render from CDN.
@@ -63,7 +59,7 @@ module.exports = () => {
       }));
     }
 
-    res.send(ejs.render(template, {
+    return res.send(ejs.render(template, {
       config,
       assets: {
         app: '/app/bundle.js'

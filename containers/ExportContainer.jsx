@@ -5,7 +5,7 @@ import { Button, ButtonToolbar } from 'react-bootstrap';
 import { exportActions } from '../actions';
 import { ExportFilterTextBox, ExportColumns, ExportSettings, ExportProgressDialog } from '../components';
 
-export default class ExportContainer extends Component {
+export class ExportContainer extends Component {
   componentWillMount = () => {
     this.props.getUserCount();
   }
