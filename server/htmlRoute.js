@@ -1,5 +1,5 @@
 const ejs = require('ejs');
-const nconf = require('nconf');
+const cfg = require('./lib/config');
 const urlHelpers = require('auth0-extension-express-tools').urlHelpers;
 
 module.exports = () => {
@@ -37,9 +37,9 @@ module.exports = () => {
 
   return (req, res) => {
     const config = {
-      HOSTING_ENV: nconf.get('HOSTING_ENV'),
-      CLIENT_VERSION: nconf.get('CLIENT_VERSION') || '???',
-      AUTH0_DOMAIN: nconf.get('AUTH0_DOMAIN'),
+      HOSTING_ENV: cfg('HOSTING_ENV'),
+      CLIENT_VERSION: cfg('CLIENT_VERSION') || '???',
+      AUTH0_DOMAIN: cfg('AUTH0_DOMAIN'),
       BASE_URL: urlHelpers.getBaseUrl(req),
       BASE_PATH: urlHelpers.getBasePath(req)
     };
@@ -49,7 +49,7 @@ module.exports = () => {
     }
 
     // Render from CDN.
-    const clientVersion = nconf.get('CLIENT_VERSION');
+    const clientVersion = cfg('CLIENT_VERSION');
     if (clientVersion) {
       return res.send(ejs.render(template, {
         config,

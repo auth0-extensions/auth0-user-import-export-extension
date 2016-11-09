@@ -1,12 +1,12 @@
 {
   "name": "auth0-user-import-export-extension",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "An extension that allows you to import and export users to your Auth0 account",
   "main": "server.js",
   "dependencies": {
     "auth0": "^2.1.0",
     "auth0-extension-express-tools": "^0.6.0",
-    "auth0-extension-tools": "^1.0.0",
+    "auth0-extension-tools": "0.13.0",
     "auth0-oauth2-express": "^1.2.0",
     "body-parser": "^1.15.0",
     "boom": "^2.7.2",

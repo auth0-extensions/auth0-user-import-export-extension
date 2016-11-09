@@ -62,7 +62,7 @@ export function importUsers(files, connectionId) {
         dispatch({
           type: constants.IMPORT_USERS,
           payload: {
-            promise: axios.post(`https://sandrino.auth0.com/api/v2/jobs/users-imports`, data, {
+            promise: axios.post(`https://${window.config.AUTH0_DOMAIN}/api/v2/jobs/users-imports`, data, {
               responseType: 'json'
             })
           }
