@@ -45,7 +45,7 @@ class ExportSettings extends Component {
               <label className="control-label" style={{ position: 'absolute', left: '75px', marginTop: '3px' }}>Descending</label>
               <div className="ui-switch">
                 <input ref="sortType" type="checkbox" defaultValue={settings.sortType} onChange={this.onChangeSortType} />
-                <label className="status"></label>
+                <label className="status" />
               </div>
             </div>
           </div>

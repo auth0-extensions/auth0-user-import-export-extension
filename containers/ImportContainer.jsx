@@ -30,7 +30,8 @@ export class ImportContainer extends Component {
     const connections = this.props.connections;
     return (
       <label>
-        <select defaultValue="" name="connection_id" ref="connectionId" className="form-control"
+        <select
+          defaultValue="" name="connection_id" ref="connectionId" className="form-control"
           style={{ width: '300px', marginLeft: '5px', display: 'inline-block', maxWidth: '300px' }}
         >
           <option value="" disabled>Please select a database connection</option>
@@ -52,10 +53,10 @@ export class ImportContainer extends Component {
             {this.renderConnectionChooser()}
             <ButtonToolbar className="pull-right">
               <Button bsStyle="primary" disabled={currentJob !== null} bsSize="xsmall" onClick={this.uploadFile}>
-                <i className="icon icon-budicon-337"></i> Start Importing Users
+                <i className="icon icon-budicon-337" /> Start Importing Users
               </Button>
               <Button bsStyle="default" disabled={currentJob !== null} bsSize="xsmall" onClick={this.props.clearForm}>
-                <i className="icon icon-budicon-263"></i> Clear
+                <i className="icon icon-budicon-263" /> Clear
               </Button>
             </ButtonToolbar>
           </div>

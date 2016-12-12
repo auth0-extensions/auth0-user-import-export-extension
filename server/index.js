@@ -1,8 +1,4 @@
-const path = require('path');
 const express = require('express');
-const bodyParser = require('body-parser');
-const auth0 = require('auth0-oauth2-express');
-const request = require('request');
 const tools = require('auth0-extension-express-tools');
 
 const logger = require('./lib/logger');

@@ -19,8 +19,9 @@ class ExportFilterTextBox extends Component {
             <div className="col-xs-12">
               <div className="advanced-search-control">
                 <span className="search-area">
-                  <i className="icon-budicon-489"></i>
-                  <input className="user-input" type="text" ref="search" placeholder="Enter query you want to use to load the data."
+                  <i className="icon-budicon-489" />
+                  <input
+                    className="user-input" type="text" ref="search" placeholder="Enter query you want to use to load the data."
                     spellCheck="false" style={{ marginLeft: '10px' }} {...this.props}
                   />
                 </span>

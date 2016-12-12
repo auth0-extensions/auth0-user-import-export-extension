@@ -12,7 +12,8 @@ class ImportFiles extends Component {
     }
 
     return (
-      <TableAction id={`remove-file-${index}`}
+      <TableAction
+        id={`remove-file-${index}`}
         type="success" title="Remove" icon="263"
         onClick={this.props.onRemoveFile} args={[ files, index ]}
       />
@@ -37,19 +38,19 @@ class ImportFiles extends Component {
           <TableColumn width="5%" />
         </TableHeader>
         <TableBody>
-        {files.map((file, index) =>
-          <TableRow key={index}>
-            <TableTextCell>{file.name}</TableTextCell>
-            <TableTextCell>{((file.size || 0) / 1024).toFixed(2) + ' KB'}</TableTextCell>
-            <TableTextCell>
-              <span style={{ color: colors[file.status] }}>
-                {status[file.status]}
-              </span>
-            </TableTextCell>
-            <TableCell>
-              {this.getAction(files, file, index)}
-            </TableCell>
-          </TableRow>
+          {files.map((file, index) =>
+            <TableRow key={index}>
+              <TableTextCell>{file.name}</TableTextCell>
+              <TableTextCell>{`${((file.size || 0) / 1024).toFixed(2)} KB`}</TableTextCell>
+              <TableTextCell>
+                <span style={{ color: colors[file.status] }}>
+                  {status[file.status]}
+                </span>
+              </TableTextCell>
+              <TableCell>
+                {this.getAction(files, file, index)}
+              </TableCell>
+            </TableRow>
         )}
         </TableBody>
       </Table>

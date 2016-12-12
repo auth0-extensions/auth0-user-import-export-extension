@@ -60,12 +60,12 @@ export const exportReducer = createReducer(fromJS(initialState), {
     }),
   [constants.REMOVE_COLUMN]: (state, action) => {
     const columns = state.get('columns');
-    const index = columns.findIndex((c) => c.get('_id') === action.payload._id);
+    const index = columns.findIndex(c => c.get('_id') === action.payload._id);
     return state.merge({
       columns: columns.delete(index)
     });
   },
-  [constants.FETCH_USER_COUNT_PENDING]: (state) =>
+  [constants.FETCH_USER_COUNT_PENDING]: state =>
     state.merge({
       query: state.get('query').merge({
         loading: true,
@@ -86,14 +86,14 @@ export const exportReducer = createReducer(fromJS(initialState), {
         error: action.payload
       }
     }),
-  [constants.CLOSE_EXPORT_DIALOG]: (state) =>
+  [constants.CLOSE_EXPORT_DIALOG]: state =>
     state.merge({
       process: {
         started: false,
         current: 0
       }
     }),
-  [constants.EXPORT_USERS_STARTED]: (state) =>
+  [constants.EXPORT_USERS_STARTED]: state =>
     state.merge({
       process: {
         error: null,
@@ -102,7 +102,7 @@ export const exportReducer = createReducer(fromJS(initialState), {
         current: 0
       }
     }),
-  [constants.EXPORT_USERS_CANCEL]: (state) =>
+  [constants.EXPORT_USERS_CANCEL]: state =>
     state.merge({
       process: {
         started: false,

@@ -15,7 +15,7 @@ export function RequireAuthentication(InnerComponent) {
     requireAuthentication() {
       return;
       if (!this.props.auth.isAuthenticated && !this.props.auth.isAuthenticating) {
-        if(window.config.IS_ADMIN) {
+        if (window.config.IS_ADMIN) {
           this.props.push('/login');
         } else {
           this.props.push(`/login?returnUrl=${this.props.location.pathname}`);
@@ -24,9 +24,9 @@ export function RequireAuthentication(InnerComponent) {
     }
 
     render() {
-      return <InnerComponent {...this.props}/>;
+      return <InnerComponent {...this.props} />;
     }
   }
 
-  return connect((state) => ({ }), { push })(RequireAuthenticationContainer);
+  return connect(state => ({ }), { push })(RequireAuthenticationContainer);
 }

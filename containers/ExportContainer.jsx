@@ -51,7 +51,8 @@ export class ExportContainer extends Component {
       <div>
         <ExportProgressDialog export={this.props.export} onDownload={this.onDownload} onClose={this.props.closeExportDialog} />
         <ExportFilterTextBox loading={query.loading} defaultValue="" onBlur={this.onQueryChanged} querySize={query.size} />
-        <ExportColumns columns={columns}
+        <ExportColumns
+          columns={columns}
           onAddDefaultColumns={this.onAddDefaultColumns} onAddColumn={this.onAddColumn} onRemoveColumn={this.props.removeColumn}
         />
         <ExportSettings export={this.props.export} onChange={this.props.updateSettings} />

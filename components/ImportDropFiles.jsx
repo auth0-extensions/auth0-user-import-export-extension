@@ -19,7 +19,7 @@ class ImportDropFiles extends Component {
       <Dropzone onDrop={this.props.onDrop} multiple disablePreview style={this.dropzoneStyle}>
         <div>Drop your file here, or click to select.</div>
       </Dropzone>
-    )
+    );
   }
 }
 

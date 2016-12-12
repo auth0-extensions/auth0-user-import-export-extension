@@ -22,7 +22,7 @@ const reduxHistory = syncHistoryWithStore(history, store);
 const accessToken = sessionStorage.getItem('token');
 axios.interceptors.request.use((config) => {
   if (config.url.indexOf(window.config.AUTH0_DOMAIN) > 0) {
-    config.headers['Authorization'] = `Bearer ${accessToken}`;
+    config.headers.Authorization = `Bearer ${accessToken}`;
   } else if (config.url.indexOf(window.config.BASE_URL) === 0) {
     config.headers['X-Authorization'] = `Bearer ${accessToken}`;
   }
