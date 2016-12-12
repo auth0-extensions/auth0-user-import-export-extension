@@ -57,6 +57,8 @@ function downloadUsers(settings, query, page = 1) {
   let url = `https://${window.config.AUTH0_DOMAIN}/api/v2/users?per_page=100&page=${page}&search_engine=v2`;
   if (settings.sortBy && settings.sortBy.length) {
     url += `&sort=${settings.sortBy}:${settings.sortDesc ? -1 : 1}`;
+  } else {
+    url += '&sort=user_id:1';
   }
 
   return axios
