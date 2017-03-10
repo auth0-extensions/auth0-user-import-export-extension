@@ -40,7 +40,9 @@ export function importUsers(files, connectionId) {
     };
   }
 
-  return (dispatch) => {
+  return (dispatch, getState) => {
+    const state = getState();
+    const connection = state.connection.toJS().records.filter((item) => item.id == connectionId)[0];
     if (formData.userFile) {
       const fileReader = new FileReader();
       fileReader.addEventListener('load', (event) => {
@@ -64,7 +66,10 @@ export function importUsers(files, connectionId) {
           payload: {
             promise: axios.post(`https://${window.config.AUTH0_DOMAIN}/api/v2/jobs/users-imports`, data, {
               responseType: 'json'
-            })
+            }),
+          },
+          meta: {
+            connection: connection
           }
         });
       });

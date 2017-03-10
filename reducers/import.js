@@ -28,14 +28,22 @@ export const importReducer = createReducer(fromJS(initialState), {
       loading: true,
       error: null
     }),
-  [constants.IMPORT_USERS_REJECTED]: (state, action) =>
-    state.merge({
+  [constants.IMPORT_USERS_REJECTED]: (state, action) => {
+    const connectionId = state.toJS().connectionId;
+    let errorMessage = 'An error occured while uploading the file: ';
+
+    if (action.payload.response.data.errorCode === 'connection_is_disabled') {
+      errorMessage += `Cannot import users to a connection that is not enabled. Please <a href="https://manage.auth0.com/#/connections/database/${connectionId}/clients">enable</a> at least one client for ${action.meta.connection.name}.`;
+    } else {
+      errorMessage += `${action.payload.message === 'Network Error' ? 'Verify the size of your upload and make sure the connection is enabled.' : (action.payload.message || action.payload.statusText)}`;
+    }
+    return state.merge({
       currentJob: null,
       currentJobIndex: -1,
       loading: false,
-      error: 'An error occured while uploading the file: ' +
-        `${action.payload.message === 'Network Error' ? 'Verify the size of your upload and make sure the connection is enabled.' : (action.payload.message || action.payload.statusText)}`
-    }),
+      error: errorMessage
+    })
+  },
   [constants.IMPORT_USERS_FULFILLED]: (state, action) => {
     const updatedFiles = [];
     const currentJob = fromJS(action.payload.data);

@@ -24,7 +24,7 @@ class Error extends Component {
 
     return <Alert bsStyle="danger" onDismiss={this.onDismiss.bind(this)} dismissAfter={this.props.dismissAfter || 10000}>
        <h4>Oh snap! You got an error!</h4>
-       <p>{this.props.message}</p>
+       <p dangerouslySetInnerHTML={{__html: this.props.message}}></p>
        {errors}
      </Alert>;
   }
