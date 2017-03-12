@@ -10,7 +10,7 @@ export function importUsers(files, connectionId) {
   const formData = new FormData();
   formData.connection_id = connectionId;
 
-  for (let i = 0; i < files.size; i++) {
+  for (let i = 0; i < files.size; i += 1) {
     if (files.get(i).status === 'queued') {
       formData.userFile = files.get(i);
       jobIndex = i;
@@ -42,7 +42,8 @@ export function importUsers(files, connectionId) {
 
   return (dispatch, getState) => {
     const state = getState();
-    const connection = state.connection.toJS().records.filter((item) => item.id == connectionId)[0];
+    const connection = state.connection.toJS().records.find(item => item.id === connectionId);
+
     if (formData.userFile) {
       const fileReader = new FileReader();
       fileReader.addEventListener('load', (event) => {
@@ -66,13 +67,14 @@ export function importUsers(files, connectionId) {
           payload: {
             promise: axios.post(`https://${window.config.AUTH0_DOMAIN}/api/v2/jobs/users-imports`, data, {
               responseType: 'json'
-            }),
+            })
           },
           meta: {
-            connection: connection
+            connection
           }
         });
       });
+
       fileReader.readAsText(formData.userFile);
     }
   };

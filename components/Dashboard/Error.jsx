@@ -10,23 +10,23 @@ class Error extends Component {
 
   render() {
     if (!this.props.message) {
-      return this.props.children || <div></div>;
+      return this.props.children || <div />;
     }
 
-    var errors = '';
+    let errors = '';
     if (this.props.errors && this.props.errors.size > 0) {
       errors = (<ul>
-      {this.props.errors.map((err, index) =>
-        <li key={err}>{err}</li>
+        {this.props.errors.map((err, index) =>
+          <li key={err}>{err}</li>
       )}
       </ul>);
     }
 
-    return <Alert bsStyle="danger" onDismiss={this.onDismiss.bind(this)} dismissAfter={this.props.dismissAfter || 10000}>
-       <h4>Oh snap! You got an error!</h4>
-       <p dangerouslySetInnerHTML={{__html: this.props.message}}></p>
-       {errors}
-     </Alert>;
+    return (<Alert bsStyle="danger" onDismiss={this.onDismiss.bind(this)} dismissAfter={this.props.dismissAfter || 10000}>
+      <h4>Oh snap! You got an error!</h4>
+      <p>{this.props.message}</p>
+      {errors}
+    </Alert>);
   }
 }
 
