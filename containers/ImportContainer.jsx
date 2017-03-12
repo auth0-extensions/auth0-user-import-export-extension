@@ -43,8 +43,23 @@ export class ImportContainer extends Component {
     );
   }
 
+  renderError(error, errorCode, connectionId, connectionName) {
+    if (errorCode && errorCode === 'connection_is_disabled') {
+      return (
+        <span>
+          Cannot import users to a connection that is not enabled.
+          Please <a href={`https://manage.auth0.com/#/connections/database/${connectionId}/clients`}>enable</a> at least one client for {connectionName}.
+        </span>
+      );
+    } else if (error) {
+      return <span>{error}</span>;
+    }
+
+    return null;
+  }
+
   render() {
-    const { error, validationErrors, loading, files, currentJob } = this.props;
+    const { error, errorCode, currentConnectionId, currentConnectionName, validationErrors, loading, files, currentJob } = this.props;
     return (
       <div>
         <ImportDropFiles onDrop={this.onDrop} />
@@ -63,7 +78,7 @@ export class ImportContainer extends Component {
         </div>
 
         <LoadingPanel show={loading} animationStyle={{ paddingTop: '5px', paddingBottom: '5px' }}>
-          <Error message={error} errors={validationErrors} onDismiss={this.props.dismissError} />
+          <Error message={this.renderError(error, errorCode, currentConnectionId, currentConnectionName)} errors={validationErrors} onDismiss={this.props.dismissError} />
           <ImportFiles files={files} onRemoveFile={this.props.removeFile} />
         </LoadingPanel>
       </div>
@@ -89,6 +104,9 @@ function mapStateToProps(state) {
     files: state.import.get('files'),
     currentJob: state.import.get('currentJob'),
     error: state.import.get('error'),
+    errorCode: state.import.get('errorCode'),
+    currentConnectionId: state.import.get('currentConnectionId'),
+    currentConnectionName: state.import.get('currentConnectionName'),
     validationErrors: state.import.get('validationErrors')
   };
 }

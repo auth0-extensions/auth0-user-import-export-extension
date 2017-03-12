@@ -26,15 +26,19 @@ export const importReducer = createReducer(fromJS(initialState), {
   [constants.IMPORT_USERS_PENDING]: state =>
     state.merge({
       loading: true,
-      error: null
+      error: null,
+      errorCode: null
     }),
   [constants.IMPORT_USERS_REJECTED]: (state, action) =>
     state.merge({
       currentJob: null,
       currentJobIndex: -1,
+      currentConnectionId: state.toJS().connectionId,
+      currentConnectionName: action.meta.connection.name,
       loading: false,
+      errorCode: action.payload.response && action.payload.response.data && action.payload.response.data.errorCode,
       error: 'An error occured while uploading the file: ' +
-        `${action.payload.message === 'Network Error' ? 'Verify the size of your upload and make sure the connection is enabled.' : (action.payload.message || action.payload.statusText)}`
+      `${action.payload.message === 'Network Error' ? 'Verify the size of your upload and make sure the connection is enabled.' : ((action.payload.response && action.payload.response.data && action.payload.response.data.message) || action.payload.message || action.payload.statusText)}`
     }),
   [constants.IMPORT_USERS_FULFILLED]: (state, action) => {
     const updatedFiles = [];
