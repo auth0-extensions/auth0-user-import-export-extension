@@ -1,3 +1,6 @@
+
+export const MAX_RECORDS = 200000;
+
 /*
 * Connections.
 */

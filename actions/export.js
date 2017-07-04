@@ -65,12 +65,12 @@ function downloadUsers(settings, query, page = 1) {
     .get(`${url}&q=${encodeURIComponent(query)}`, {
       responseType: 'json'
     })
-    .then(res => {
-      return {
-        res,
-        nextPage: page + 1
-      };
-    });
+    .then(res =>
+       ({
+         res,
+         nextPage: page + 1
+       })
+    );
 }
 
 export function closeExportDialog() {
@@ -123,8 +123,8 @@ export function exportUsers(query, settings) {
           items = items.concat(res.data);
         }
 
-        if (items.length >= 100000) {
-          items = items.slice(0, 100000);
+        if (items.length >= constants.MAX_RECORDS) {
+          items = items.slice(0, constants.MAX_RECORDS);
           stopped = true;
         }
 

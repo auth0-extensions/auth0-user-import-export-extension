@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import React, { Component, PropTypes } from 'react';
 import { Button, ButtonToolbar } from 'react-bootstrap';
 
+import * as constants from '../constants';
 import { exportActions } from '../actions';
 import { ExportFilterTextBox, ExportColumns, ExportSettings, ExportProgressDialog } from '../components';
 
@@ -36,7 +37,7 @@ export class ExportContainer extends Component {
 
   getExportTitle(query) {
     if (query && query.size) {
-      const size = query.size > 100000 ? 100000 : query.size;
+      const size = query.size > constants.MAX_RECORDS ? constants.MAX_RECORDS : query.size;
       return `Export ${size} Users`;
     }
     return 'Export';
