@@ -1,5 +1,5 @@
 
-export const MAX_RECORDS = 200000;
+export const MAX_RECORDS = 10000;
 
 /*
 * Connections.
