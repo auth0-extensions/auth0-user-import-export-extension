@@ -1,6 +1,4 @@
 
-export const MAX_RECORDS = 10000;
-
 /*
 * Connections.
 */

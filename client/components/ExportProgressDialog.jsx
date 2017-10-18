@@ -9,21 +9,18 @@ class ExportProgressDialog extends Component {
 
   render() {
     const data = this.props.export.toJS();
-    let percentage = 0;
-    if (data.query.size) {
-      percentage = Math.round((data.process.current / data.query.size) * 100);
-    }
+    const percentage = data.process.current;
 
-    let title = `Exporting ${data.query.size} Users`;
+    let title = `Exporting... ${data.process.current}%`;
     if (percentage === 100) {
-      title = `Exported ${data.query.size} Users`;
+      title = 'Done!';
     }
 
     const onDownload = data.process.complete ? this.props.onDownload : null;
 
     return (
       <Confirm confirmMessage={'Download'} size="large" title={title} show={data.process.started} loading={false} onCancel={this.props.onClose} onConfirm={onDownload}>
-        <ProgressBar active={percentage !== 100} now={percentage} label={`${data.process.current} of ${data.query.size}`} />
+        <ProgressBar active={percentage !== 100} now={percentage} label={`${percentage}%`} />
         <Error message={data.process.error} />
       </Confirm>
     );

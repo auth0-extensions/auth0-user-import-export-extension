@@ -4,7 +4,6 @@ const tools = require('auth0-extension-express-tools');
 
 const logger = require('./lib/logger');
 const config = require('./lib/config');
-const getUsers = require('./lib/getUsers');
 const metadata = require('../webtask.json');
 const htmlRoute = require('./htmlRoute');
 
@@ -29,10 +28,9 @@ module.exports = (configProvider) => {
     clientName: 'User Import / Export Extension',
     urlPrefix: '',
     sessionStorageKey: 'user-import-export-extension:apiToken',
-    scopes: 'create:users read:users read:connections'
+    scopes: 'create:users read:users read:connections create:passwords_checking_job'
   }));
 
-  app.get('/api/users', getUsers);
   app.get('*', htmlRoute());
 
   // Generic error handler.

@@ -2,15 +2,14 @@ import axios from 'axios';
 import uuid from 'node-uuid';
 import * as constants from '../constants';
 import promiseWhile from '../utils/promiseWhile';
-import { toJSON, toCSV } from '../utils/saveFile';
 
-export function addColumn(userAttribute, columnName) {
+export function addColumn(name, exportAs) {
   return {
     type: constants.ADD_COLUMN,
     payload: {
       _id: uuid.v4(),
-      userAttribute,
-      columnName
+      name,
+      export_as: exportAs
     }
   };
 }
@@ -53,44 +52,20 @@ export function getUserCount(query = '') {
   };
 }
 
-// function downloadUsers(settings, query, page = 1) {
-//   let url = `https://${window.config.AUTH0_DOMAIN}/api/v2/users?per_page=100&page=${page}&search_engine=v2`;
-//   if (settings.sortBy && settings.sortBy.length) {
-//     url += `&sort=${settings.sortBy}:${settings.sortDesc ? -1 : 1}`;
-//   } else {
-//     url += '&sort=user_id:1';
-//   }
-//
-//   return axios
-//     .get(`${url}&q=${encodeURIComponent(query)}`, {
-//       responseType: 'json'
-//     })
-//     .then(res =>
-//        ({
-//          res,
-//          nextPage: page + 1
-//        })
-//     );
-// }
-
-function downloadUsers(settings, query, page = 1) {
-  let url = `${window.config.BASE_URL}/api/users?page=${page}`;
-  if (settings.sortBy && settings.sortBy.length) {
-    url += `&sort=${settings.sortBy}:${settings.sortDesc ? -1 : 1}`;
-  } else {
-    url += '&sort=user_id:1';
-  }
+function createJob(settings = {}) {
+  let url = `https://${window.config.AUTH0_DOMAIN}/api/v2/jobs/users-exports`;
 
   return axios
-    .get(`${url}&q=${encodeURIComponent(query)}`, {
-      responseType: 'json'
-    })
-    .then(res =>
-      ({
-        res,
-        nextPage: page + 1
-      })
-    );
+    .post(url, settings)
+    .then(res => res && res.data && res.data.id);
+}
+
+function checkJob(id) {
+  let url = `https://${window.config.AUTH0_DOMAIN}/api/v2/jobs/${id}`;
+
+  return axios
+    .get(url)
+    .then(res => res);
 }
 
 export function closeExportDialog() {
@@ -99,91 +74,58 @@ export function closeExportDialog() {
   };
 }
 
-export function downloadUsersToFile(settings, columns, defaultColumns, items) {
-  try {
-    if (settings.format === 'json') {
-      toJSON('export.json', columns, items);
-    } else {
-      toCSV('export.csv', columns && columns.length ? columns : defaultColumns, items);
-    }
-
-    return closeExportDialog();
-  } catch (e) {
-    return {
-      type: constants.SAVE_USERS_REJECTED,
-      payload: {
-        error: `Mapping failed: ${e.message}. Please review your user attributes for possible errors.`
-      }
-    };
-  }
+export function downloadUsersToFile(link) {
+  window.location = link;
+  return closeExportDialog();
 }
 
-export function exportUsers(query, settings) {
+export function exportUsers(settings, fields) {
   return (dispatch, getState) => {
     // Start.
     dispatch({
       type: constants.EXPORT_USERS_STARTED
     });
 
-    let page = 0;
-    let items = [];
-    let continueIn = 0;
+    let done = false;
+    let link = '';
+    settings.fields = fields.map(field => ({ name: field.name, export_as: field.export_as }));
 
-    // Download everything.
-    promiseWhile(() => continueIn,
-      () => downloadUsers(settings, query, page).then(({ res, nextPage }) => {
-        const data = (res && res.data) || {};
+    createJob(settings)
+      .then(jobId => {
+        promiseWhile(() => !done,
+          () => checkJob(jobId).then(res => {
+            const data = (res && res.data) || {};
+            if (!getState().export.get('process').get('started')) {
+              done = true;
+              return;
+            }
 
-        if (data.limits && data.limits.remaining < 5) {
-          // Pause downloading
-          continueIn = 1000;
-        } else if (data.limits && data.limits.remaining === 0) {
-          const reset = (data.limits.reset + 1) * 1000;
-          const now = new Date().getTime();
-          continueIn = reset - now;
-        } else {
-          continueIn = 0;
-        }
+            if (data.status === 'completed') {
+              done = true;
+              link = data.location;
+            }
 
-        if (!getState().export.get('process').get('started')) {
-          continueIn = -1;
-          return;
-        }
-
-        if (!data.users || !data.users.length) {
-          continueIn = -1;
-        } else {
-          items = items.concat(data.users);
-        }
-
-        if (items.length >= constants.MAX_RECORDS) {
-          items = items.slice(0, constants.MAX_RECORDS);
-          continueIn = -1;
-        }
-
-        // Report progress.
-        dispatch({
-          type: constants.EXPORT_USERS_PROGRESS,
-          payload: {
-            count: items.length
-          }
-        });
-
-        // Continue.
-        page = nextPage;
-      }))
-      .then(() => {
-        if (!getState().export.get('process').get('started')) {
-          return;
-        }
-
-        // Report progress.
-        dispatch({
-          type: constants.EXPORT_USERS_COMPLETE,
-          payload: {
-            items
-          }
-        });
+            // Report progress.
+            dispatch({
+              type: constants.EXPORT_USERS_PROGRESS,
+              payload: {
+                percentage: data.percentage_done || 0
+              }
+            });
+          }))
+          .then(() => {
+            if (!getState().export.get('process').get('started')) {
+              return;
+            }
+            // Report progress.
+            dispatch({
+              type: constants.EXPORT_USERS_COMPLETE,
+              payload: {
+                link,
+                percentage: 100
+              }
+            });
+          });
       });
   };
 }

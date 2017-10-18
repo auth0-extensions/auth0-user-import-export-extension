@@ -4,7 +4,7 @@ import { Button, ButtonToolbar } from 'react-bootstrap';
 
 import * as constants from '../constants';
 import { exportActions } from '../actions';
-import { ExportFilterTextBox, ExportColumns, ExportSettings, ExportProgressDialog } from '../components';
+import { ExportColumns, ExportSettings, ExportProgressDialog } from '../components';
 
 export class ExportContainer extends Component {
   componentWillMount = () => {
@@ -12,13 +12,13 @@ export class ExportContainer extends Component {
   }
 
   onExport = () => {
-    const { query, settings } = this.props.export.toJS();
-    this.props.exportUsers(query.filter || '', settings);
+    const { settings, fields } = this.props.export.toJS();
+    this.props.exportUsers(settings, fields);
   }
 
   onDownload = () => {
     const data = this.props.export.toJS();
-    this.props.downloadUsersToFile(data.settings, data.columns, data.defaultColumns, data.process.items);
+    this.props.downloadUsersToFile(data.process.link);
   }
 
   onQueryChanged = (e) => {
@@ -26,18 +26,18 @@ export class ExportContainer extends Component {
     this.props.updateSearchFilter(e.target.value);
   }
 
-  onAddColumn = ({ userAttribute, columnName }) => {
-    this.props.addColumn(userAttribute, columnName);
+  onAddColumn = ({ name, export_as }) => {
+    this.props.addColumn(name, export_as);
   }
 
   onAddDefaultColumns = () => {
-    const { defaultColumns } = this.props.export.toJS();
-    defaultColumns.forEach(col => this.props.addColumn(col.userAttribute, col.columnName));
+    const { defaultFields } = this.props.export.toJS();
+    defaultFields.forEach(col => this.props.addColumn(col.name, col.export_as));
   }
 
   getExportTitle(query) {
     if (query && query.size) {
-      const size = query.size > constants.MAX_RECORDS ? constants.MAX_RECORDS : query.size;
+      const size = query.size;
       return `Export ${size} Users`;
     }
     return 'Export';
@@ -46,14 +46,13 @@ export class ExportContainer extends Component {
   inputStyle = { marginRight: '5px', width: '300px' }
 
   render() {
-    const { query, columns } = this.props.export.toJS();
+    const { query, fields } = this.props.export.toJS();
 
     return (
       <div>
         <ExportProgressDialog export={this.props.export} onDownload={this.onDownload} onClose={this.props.closeExportDialog} />
-        <ExportFilterTextBox loading={query.loading} defaultValue="" onBlur={this.onQueryChanged} querySize={query.size} />
         <ExportColumns
-          columns={columns}
+          fields={fields}
           onAddDefaultColumns={this.onAddDefaultColumns} onAddColumn={this.onAddColumn} onRemoveColumn={this.props.removeColumn}
         />
         <ExportSettings export={this.props.export} onChange={this.props.updateSettings} />

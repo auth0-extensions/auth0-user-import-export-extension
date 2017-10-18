@@ -11,7 +11,7 @@ class ColumnExport extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.columns !== this.props.columns ||
+    return nextProps.fields !== this.props.fields ||
       nextState.addEnabled !== this.state.addEnabled;
   }
 
@@ -19,8 +19,8 @@ class ColumnExport extends Component {
     this.props.onAddColumn(this.getValues());
 
     // Reset the textboxes.
-    findDOMNode(this.refs.userAttribute).value = '';
-    findDOMNode(this.refs.columnName).value = '';
+    findDOMNode(this.refs.name).value = '';
+    findDOMNode(this.refs.export_as).value = '';
   }
 
   onRemoveColumn = (col) => {
@@ -30,19 +30,19 @@ class ColumnExport extends Component {
   onChange = () => {
     const values = this.getValues();
     this.setState({
-      addEnabled: values.columnName && values.columnName.length && values.userAttribute && values.userAttribute.length
+      addEnabled: values.export_as && values.export_as.length && values.name && values.name.length
     });
   }
 
   getValues = () => ({
-    userAttribute: findDOMNode(this.refs.userAttribute).value,
-    columnName: findDOMNode(this.refs.columnName).value
+    name: findDOMNode(this.refs.name).value,
+    export_as: findDOMNode(this.refs.export_as).value
   })
 
   inputStyle = { marginRight: '5px', width: '300px' }
 
-  renderColumns = (columns) => {
-    if (!columns || !columns.length) {
+  renderColumns = (fields) => {
+    if (!fields || !fields.length) {
       return <div />;
     }
 
@@ -50,14 +50,14 @@ class ColumnExport extends Component {
       <Table>
         <TableHeader>
           <TableColumn width="40%">User Attribute</TableColumn>
-          <TableColumn width="40%">Column Name</TableColumn>
+          <TableColumn width="40%">Field Name</TableColumn>
           <TableColumn width="5%" />
         </TableHeader>
         <TableBody>
-        {columns.map((col, index) =>
+        {fields.map((col, index) =>
           <TableRow key={index}>
-            <TableTextCell><code>{col.userAttribute}</code></TableTextCell>
-            <TableTextCell>{col.columnName}</TableTextCell>
+            <TableTextCell><code>{col.name}</code></TableTextCell>
+            <TableTextCell>{col.export_as}</TableTextCell>
             <TableCell>
               <TableAction id={`remove-column-${index}`}
                 type="success" title="Remove" icon="263"
@@ -72,10 +72,11 @@ class ColumnExport extends Component {
   }
 
   render() {
+    console.log(this.props);
     return (
       <div className="row">
         <div className="col-xs-12">
-          <h5>Columns</h5>
+          <h5>Fields</h5>
           <div className="row">
             <div className="col-xs-9">
               <p style={{ marginTop: '0px' }}>
@@ -84,17 +85,17 @@ class ColumnExport extends Component {
               </p>
             </div>
             <div className="col-xs-3">
-              <Button bsStyle="primary" bsSize="xs" onClick={this.props.onAddDefaultColumns}>Add Default Columns</Button>
+              <Button bsStyle="primary" bsSize="xs" onClick={this.props.onAddDefaultColumns}>Add Default Fields</Button>
             </div>
           </div>
           <form className="form-inline">
             <div className="form-group" style={{ verticalAlign: 'top' }}>
-              <input ref="userAttribute" type="text" className="form-control" placeholder="User Attribute / Expression" style={this.inputStyle} onChange={this.onChange} />
-              <div className="help-block" style={{ width: '270px' }}>An attribute name or expression to extract a value from the user object. Eg: <code>user.name</code> or <code>user.name || user.app_metadata.name</code></div>
+              <input ref="name" type="text" className="form-control" placeholder="User Fields" style={this.inputStyle} onChange={this.onChange} />
+              <div className="help-block" style={{ width: '270px' }}>Fields to extract from the user object. Eg: <code>email</code> or <code>identities[0].connection</code></div>
             </div>
             <div className="form-group" style={{ verticalAlign: 'top' }}>
-              <input ref="columnName" type="text" className="form-control" placeholder="Column Name" style={this.inputStyle} onChange={this.onChange} />
-              <div className="help-block" style={{ width: '270px' }}>Specify the attribute/column name in the output. Eg: <code>Name</code></div>
+              <input ref="export_as" type="text" className="form-control" placeholder="Column Name" style={this.inputStyle} onChange={this.onChange} />
+              <div className="help-block" style={{ width: '270px' }}>Specify the attribute/column name in the output. Eg: <code>Email</code></div>
             </div>
             <div className="form-group" style={{ verticalAlign: 'top' }}>
               <Button bsStyle="primary" bsSize="small" disabled={!this.state.addEnabled} onClick={this.onAddColumn}>
@@ -102,7 +103,7 @@ class ColumnExport extends Component {
              </Button>
             </div>
           </form>
-          {this.renderColumns(this.props.columns)}
+          {this.renderColumns(this.props.fields)}
         </div>
       </div>
     );
@@ -111,7 +112,7 @@ class ColumnExport extends Component {
 
 ColumnExport.propTypes = {
   loading: PropTypes.bool,
-  columns: PropTypes.array,
+  fields: PropTypes.array,
   onAddDefaultColumns: PropTypes.func.isRequired,
   onAddColumn: PropTypes.func.isRequired,
   onRemoveColumn: PropTypes.func.isRequired

@@ -9,23 +9,21 @@ const initialState = {
     json: 'JSON file (*.json)'
   },
   settings: {
-    sortBy: null,
-    sortDesc: false,
     format: 'json'
   },
-  columns: [ ],
-  defaultColumns: [
-    { userAttribute: 'user.user_id', columnName: 'Id' },
-    { userAttribute: 'user.given_name', columnName: 'Given Name' },
-    { userAttribute: 'user.family_name', columnName: 'Family Name' },
-    { userAttribute: 'user.nickname', columnName: 'Nickname' },
-    { userAttribute: 'user.name', columnName: 'Name' },
-    { userAttribute: 'user.email', columnName: 'Email' },
-    { userAttribute: 'user.email_verified', columnName: 'Email Verified' },
-    { userAttribute: 'user.picture', columnName: 'Picture' },
-    { userAttribute: 'user.identities[0].connection', columnName: 'Connection' },
-    { userAttribute: 'user.created_at', columnName: 'Created At' },
-    { userAttribute: 'user.updated_at', columnName: 'Updated At' }
+  fields: [ ],
+  defaultFields: [
+    { name: 'user_id', export_as: 'Id' },
+    { name: 'given_name', export_as: 'Given Name' },
+    { name: 'family_name', export_as: 'Family Name' },
+    { name: 'nickname', export_as: 'Nickname' },
+    { name: 'name', export_as: 'Name' },
+    { name: 'email', export_as: 'Email' },
+    { name: 'email_verified', export_as: 'Email Verified' },
+    { name: 'picture', export_as: 'Picture' },
+    { name: 'identities[0].connection', export_as: 'Connection' },
+    { name: 'created_at', export_as: 'Created At' },
+    { name: 'updated_at', export_as: 'Updated At' }
   ],
   query: {
     loading: true,
@@ -56,13 +54,13 @@ export const exportReducer = createReducer(fromJS(initialState), {
     }),
   [constants.ADD_COLUMN]: (state, action) =>
     state.merge({
-      columns: state.get('columns').push(fromJS(action.payload))
+      fields: state.get('fields').push(fromJS(action.payload))
     }),
   [constants.REMOVE_COLUMN]: (state, action) => {
-    const columns = state.get('columns');
-    const index = columns.findIndex(c => c.get('_id') === action.payload._id);
+    const fields = state.get('fields');
+    const index = fields.findIndex(c => c.get('_id') === action.payload._id);
     return state.merge({
-      columns: columns.delete(index)
+      fields: fields.delete(index)
     });
   },
   [constants.FETCH_USER_COUNT_PENDING]: state =>
@@ -113,7 +111,7 @@ export const exportReducer = createReducer(fromJS(initialState), {
     state.merge({
       process: {
         started: true,
-        current: action.payload.count
+        current: action.payload.percentage
       }
     }),
   [constants.EXPORT_USERS_COMPLETE]: (state, action) =>
@@ -121,8 +119,8 @@ export const exportReducer = createReducer(fromJS(initialState), {
       process: {
         started: true,
         complete: true,
-        current: state.get('process').get('current'),
-        items: action.payload.items
+        current: action.payload.percentage,
+        link: action.payload.link
       }
     }),
   [constants.EXPORT_USERS_REJECTED]: (state, action) =>

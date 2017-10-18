@@ -36,22 +36,6 @@ class ExportSettings extends Component {
         </div>
         <div className="row">
           <div className="form-group">
-            <label className="col-xs-2 control-label">Sort By</label>
-            <div className="col-xs-5">
-              <input ref="sort" className="form-control" defaultValue={settings.sortBy} type="text" ref="sortBy" placeholder="User Attribute" onChange={this.onChangeSort} />
-              <div className="help-block">This allows you to define the order of your results.</div>
-            </div>
-            <div className="col-xs-4">
-              <label className="control-label" style={{ position: 'absolute', left: '75px', marginTop: '3px' }}>Descending</label>
-              <div className="ui-switch">
-                <input ref="sortType" type="checkbox" defaultValue={settings.sortType} onChange={this.onChangeSortType} />
-                <label className="status" />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="row">
-          <div className="form-group">
             <label className="col-xs-2 control-label">Export Format</label>
             <div className="col-xs-5">
               <select ref="format" className="form-control" defaultValue={settings.format} onChange={this.onChangeFormat}>

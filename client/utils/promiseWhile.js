@@ -1,11 +1,15 @@
 import Promise from 'bluebird';
 
 const promiseWhile = Promise.method((condition, action) => {
-  if (condition() < 0) {
+  if (!condition()) {
     return null;
   }
 
-  setTimeout(() => action().then(promiseWhile.bind(null, condition, action)), condition());
+  const timeout = () =>
+    new Promise(resolve => setTimeout(() => resolve(), 1000));
+
+    return action().then(timeout).then(promiseWhile.bind(null, condition, action));
+
 });
 
 export default promiseWhile;
