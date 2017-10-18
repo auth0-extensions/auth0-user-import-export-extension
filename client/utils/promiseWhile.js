@@ -6,7 +6,7 @@ const promiseWhile = Promise.method((condition, action) => {
   }
 
   const timeout = () =>
-    new Promise(resolve => setTimeout(() => resolve(), 1000));
+    new Promise(resolve => setTimeout(() => resolve(), 5000));
 
     return action().then(timeout).then(promiseWhile.bind(null, condition, action));
 
