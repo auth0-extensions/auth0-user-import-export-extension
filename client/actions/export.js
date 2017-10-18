@@ -88,7 +88,10 @@ export function exportUsers(settings, fields) {
 
     let done = false;
     let link = '';
-    settings.fields = fields.map(field => ({ name: field.name, export_as: field.export_as }));
+
+    if (fields && fields.length) {
+      settings.fields = fields.map(field => ({ name: field.name, export_as: field.export_as }));
+    }
 
     createJob(settings)
       .then(jobId => {

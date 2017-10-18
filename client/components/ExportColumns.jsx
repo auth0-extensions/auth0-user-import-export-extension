@@ -80,7 +80,8 @@ class ColumnExport extends Component {
             <div className="col-xs-9">
               <p style={{ marginTop: '0px' }}>
                 You can decided which attributes should be included in the export.
-                The <strong>user attribute</strong> can be a static value like <code>user.app_metadata.name</code> or a Javascript expression like <code>user.app_metadata.name || user.name</code> which will then be evaluated during the export. The <strong>column name</strong> is how the value will be represented in the export.
+                The <strong>user field</strong> should be a static value like <code>app_metadata.name</code> or <code>app_metadata.address.city</code>. The <strong>column name</strong> is how the value will be represented in the export.
+
               </p>
             </div>
             <div className="col-xs-3">
