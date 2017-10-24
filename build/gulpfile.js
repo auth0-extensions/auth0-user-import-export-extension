@@ -20,9 +20,7 @@ gulp.task('run', () => {
       },
       ignore: [
         path.join(__dirname, '../build/'),
-        path.join(__dirname, '../components/'),
-        path.join(__dirname, '../containers/'),
-        path.join(__dirname, '../reducers/'),
+        path.join(__dirname, '../client/'),
         path.join(__dirname, '../node_modules/')
       ]
     });
