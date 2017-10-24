@@ -37,7 +37,7 @@ module.exports = () => {
   return (req, res) => {
     const config = {
       HOSTING_ENV: cfg('HOSTING_ENV'),
-      CLIENT_VERSION: cfg('CLIENT_VERSION') || '???',
+      CLIENT_VERSION: process.env.CLIENT_VERSION || '???',
       AUTH0_DOMAIN: cfg('AUTH0_DOMAIN'),
       BASE_URL: urlHelpers.getBaseUrl(req),
       BASE_PATH: urlHelpers.getBasePath(req)
@@ -48,7 +48,7 @@ module.exports = () => {
     }
 
     // Render from CDN.
-    const clientVersion = cfg('CLIENT_VERSION');
+    const clientVersion = process.env.CLIENT_VERSION;
     if (clientVersion) {
       return res.send(ejs.render(template, {
         config,
