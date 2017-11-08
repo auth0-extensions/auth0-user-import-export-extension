@@ -1,26 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 
 class ExportSettings extends Component {
-  onChangeSort = (e) => {
-    this.props.onChange({
-      sortBy: e.target.value,
-      sortDesc: this.refs.sortType.checked,
-      format: this.refs.format.value
-    });
-  }
-
-  onChangeSortType = (e) => {
-    this.props.onChange({
-      sortBy: this.refs.sortBy.value,
-      sortDesc: e.target.checked,
-      format: this.refs.format.value
-    });
-  }
-
   onChangeFormat = (e) => {
     this.props.onChange({
-      sortBy: this.refs.sortBy.value,
-      sortDesc: this.refs.sortType.checked,
       format: e.target.value
     });
   }
