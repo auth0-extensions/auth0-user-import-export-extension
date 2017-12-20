@@ -41,11 +41,17 @@ export function updateSettings(settings) {
   };
 }
 
-export function getUserCount(query = '') {
+export function getUserCount(connection) {
+  let url = `https://${window.config.AUTH0_DOMAIN}/api/v2/users?per_page=1&page=1&include_totals=true&search_engine=v1`;
+
+  if (connection && connection !== 'All connections') {
+    url += `&connection=${connection}`
+  }
+
   return {
     type: constants.FETCH_USER_COUNT,
     payload: {
-      promise: axios.get(`https://${window.config.AUTH0_DOMAIN}/api/v2/users?per_page=1&page=1&include_totals=true&search_engine=v2&q=${encodeURIComponent(query)}`, {
+      promise: axios.get(url, {
         responseType: 'json'
       })
     }

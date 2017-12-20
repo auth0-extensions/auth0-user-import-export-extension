@@ -1,9 +1,21 @@
+import _ from 'lodash';
 import React, { Component, PropTypes } from 'react';
 
 class ExportSettings extends Component {
   onChangeFormat = (e) => {
     this.props.onChange({
-      format: e.target.value
+      format: e.target.value,
+      connection_id: this.refs.connection.value
+    });
+  }
+
+  onChangeConnection = (e) => {
+    const connId = e.target.value;
+    const connection = _.find(this.props.connections.toJS(), { id: connId });
+    this.props.getUserCount(connection && connection.name);
+    this.props.onChange({
+      connection_id: connId,
+      format: this.refs.format.value
     });
   }
 
@@ -29,6 +41,20 @@ class ExportSettings extends Component {
             </div>
           </div>
         </div>
+        <div className="row">
+          <div className="form-group">
+            <label className="col-xs-2 control-label">Connection</label>
+            <div className="col-xs-5">
+              <select ref="connection" className="form-control" defaultValue="" onChange={this.onChangeConnection}>
+                <option value="">All connections</option>
+                {this.props.connections.map((conn, index) =>
+                  <option key={index} value={conn.get('id')} name={conn.get('name')}>{conn.get('name')}</option>
+                )}
+              </select>
+              <div className="help-block">This setting allows you to choose connection for exporting.</div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -36,6 +62,7 @@ class ExportSettings extends Component {
 
 ExportSettings.propTypes = {
   export: PropTypes.object.isRequired,
+  connections: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired
 };
 
