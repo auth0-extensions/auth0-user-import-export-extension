@@ -44,7 +44,7 @@ export function updateSettings(settings) {
 export function getUserCount(connection) {
   let url = `https://${window.config.AUTH0_DOMAIN}/api/v2/users?per_page=1&page=1&include_totals=true&search_engine=v1`;
 
-  if (connection && connection !== 'All connections') {
+  if (connection) {
     url += `&connection=${connection}`
   }
 

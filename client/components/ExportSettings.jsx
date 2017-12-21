@@ -5,12 +5,12 @@ class ExportSettings extends Component {
   onChangeFormat = (e) => {
     this.props.onChange({
       format: e.target.value,
-      connection_id: this.refs.connection.value
+      connection_id: this.refs.connection.value || undefined
     });
   }
 
   onChangeConnection = (e) => {
-    const connId = e.target.value;
+    const connId = e.target.value || undefined;
     const connection = _.find(this.props.connections.toJS(), { id: connId });
     this.props.getUserCount(connection && connection.name);
     this.props.onChange({
