@@ -1,5 +1,18 @@
 import axios from 'axios';
+import csvtojson from 'csvtojson';
+import Promise from 'bluebird';
 import * as constants from '../constants';
+
+function extractData(fileData) {
+  return new Promise((resolve) => {
+    const users = [];
+    csvtojson()
+      .fromString(fileData)
+      .on('error',() => resolve(fileData))
+      .on('json', user => users.push(user))
+      .on('done', () => resolve(JSON.stringify(users)));
+  });
+}
 
 /*
  * Import a file of users to a specific connection.
@@ -47,32 +60,35 @@ export function importUsers(files, connectionId) {
     if (formData.userFile) {
       const fileReader = new FileReader();
       fileReader.addEventListener('load', (event) => {
-        formData.users = event.currentTarget.result;
+        extractData(event.currentTarget.result)
+          .then((users) => {
+            formData.users = users;
 
-        const data = new FormData();
-        data.append('connection_id', connectionId);
-        data.append('users', new Blob([ event.currentTarget.result ], { type: 'application/json' }));
+            const data = new FormData();
+            data.append('connection_id', connectionId);
+            data.append('users', new Blob([ users ], { type: 'application/json' }));
 
-        dispatch({
-          type: constants.SET_CURRENT_JOB,
-          payload: {
-            connectionId,
-            currentJob: formData.users,
-            currentJobIndex: jobIndex
-          }
-        });
+            dispatch({
+              type: constants.SET_CURRENT_JOB,
+              payload: {
+                connectionId,
+                currentJob: formData.users,
+                currentJobIndex: jobIndex
+              }
+            });
 
-        dispatch({
-          type: constants.IMPORT_USERS,
-          payload: {
-            promise: axios.post(`https://${window.config.AUTH0_DOMAIN}/api/v2/jobs/users-imports`, data, {
-              responseType: 'json'
-            })
-          },
-          meta: {
-            connection
-          }
-        });
+            dispatch({
+              type: constants.IMPORT_USERS,
+              payload: {
+                promise: axios.post(`https://${window.config.AUTH0_DOMAIN}/api/v2/jobs/users-imports`, data, {
+                  responseType: 'json'
+                })
+              },
+              meta: {
+                connection
+              }
+            });
+          });
       });
 
       fileReader.readAsText(formData.userFile);
@@ -148,12 +164,18 @@ export function handleFileDrop(currentFiles, newFiles) {
   const errors = [];
   const files = currentFiles.concat(newFiles);
   for (let i = 0; i < newFiles.length; i++) {
-    const file = files[i];
+    const file = newFiles[i];
     file.status = 'queued';
-
-    if (file.type && file.type.indexOf('text/json') !== 0 && file.type.indexOf('application/json') !== 0) {
+    if (file.type
+      && file.type.indexOf('text/json') !== 0
+      && file.type.indexOf('application/json') !== 0
+      && file.type.indexOf('text/csv') !== 0
+      && file.type.indexOf('application/csv') !== 0
+      && file.name.substr(-3).toLocaleLowerCase() !== 'csv'
+      && file.name.substr(-4).toLocaleLowerCase() !== 'json'
+    ) {
       file.status = 'validation_failed';
-      errors.push(`${file.name}: This must be a valid JSON file.`);
+      errors.push(`${file.name}: This must be a valid JSON or CSV file.`);
     }
 
     if (file.size >= (10 * 1000 * 1000)) {

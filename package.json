@@ -53,6 +53,7 @@
     "body-parser": "^1.15.0",
     "boom": "^2.7.2",
     "comma-separated-values": "^3.6.4",
+    "csvtojson": "^1.1.9",
     "ejs": "^2.4.1",
     "express": "^4.13.4",
     "lodash": "^4.8.2",
