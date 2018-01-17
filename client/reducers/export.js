@@ -74,7 +74,8 @@ export const exportReducer = createReducer(fromJS(initialState), {
     state.merge({
       query: state.get('query').merge({
         loading: false,
-        size: action.payload.data.total
+        size: action.payload.data.total,
+        hasUsers: action.payload.data.users && action.payload.data.users.length > 0
       })
     }),
   [constants.FETCH_USER_COUNT_REJECTED]: (state, action) =>

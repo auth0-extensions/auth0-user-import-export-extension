@@ -34,17 +34,17 @@ export class ExportContainer extends Component {
   getExportTitle(query) {
     if (query && query.size) {
       const size = query.size;
-      return `Export ${size} Users`;
+      return  size > 1 ? `Export ${size} Users` : `Export 1 User`;
     }
-    return 'Export';
+    return 'Export Users';
   }
 
   renderExportButton(query) {
-    const size = (query && query.size) || 0;
-    const title = size ? size > 1 ? `Export ${size} Users` : 'Export 1 User' : 'Nothing to Export';
+    const enabled = (query && query.hasUsers);
+    const title = enabled ? this.getExportTitle(query) : 'Nothing to Export';
 
     return (
-      <Button bsStyle="primary" bsSize="small" disabled={!size} onClick={this.onExport}>
+      <Button bsStyle="primary" bsSize="small" disabled={!enabled} onClick={this.onExport}>
         {title}
       </Button>
     );
