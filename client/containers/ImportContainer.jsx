@@ -62,18 +62,6 @@ export class ImportContainer extends Component {
   render() {
     const { error, errorCode, currentConnectionId, currentConnectionName, validationErrors, loading, files, currentJob } = this.props;
 
-    if (this.props.reportJobId) {
-      return (
-        <div>
-          <JobReportDialog
-            reportJobId={this.props.reportJobId}
-            getJobReport={this.props.getJobReport}
-            closeJobReport={this.props.closeJobReport}
-          />
-        </div>
-      );
-    }
-
     return (
       <div>
         <ImportDropFiles onDrop={this.onDrop} />
@@ -94,6 +82,12 @@ export class ImportContainer extends Component {
           <Error message={this.renderError(error, errorCode, currentConnectionId, currentConnectionName)} errors={validationErrors} onDismiss={this.props.dismissError} />
           <ImportFiles files={files} onRemoveFile={this.props.removeFile} openJobReport={this.props.openJobReport}/>
         </LoadingPanel>
+        {this.props.reportJobId === null ? ''
+        : <JobReportDialog
+            reportJobId={this.props.reportJobId}
+            getJobReport={this.props.getJobReport}
+            closeJobReport={this.props.closeJobReport}
+          />}
       </div>
     );
   }

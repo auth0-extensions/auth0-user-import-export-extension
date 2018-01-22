@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { Button, ButtonToolbar } from 'react-bootstrap';
+import { Button, ButtonToolbar, Modal } from 'react-bootstrap';
 
 export class JobReportDialog extends Component {
   static propTypes = {
@@ -19,69 +19,56 @@ export class JobReportDialog extends Component {
     this.props.closeJobReport();
   }
 
-  renderError(reportItem) {
-    const record = reportItem.toJS();
-    return (
-      <div>
-        <div>{`User ${record.user.email || record.user.name || record.user.user_id}:`}</div>
-        <ul>
-          {record.errors.map(error => <li>{error.message}</li>)}
-        </ul>
-      </div>
-    )
+  renderErrors(reportItems) {
+    if (reportItems && reportItems.size) {
+      const items = reportItems.toJS();
+      return (
+        <pre>
+          {items.map(record =>
+            ` Unable to import user "${record.user.email || record.user.name || record.user.user_id}":
+            ${record.errors.map(error => '\t' + error.message + '\n')}\n`
+          )}
+        </pre>
+      );
+    }
+
+    if (this.props.loading) {
+      return (
+        <pre>
+        </pre>
+      );
+    }
+
+    if (this.props.error) {
+      return (
+        <pre>
+          {this.props.error}
+        </pre>
+      );
+    }
+
+    return 'No errors';
   }
 
   render() {
-    const { loading, error, reportJobId, importErrors } = this.props;
-
-    if (loading) {
-      return <div />;
-    }
-
-    if (error) {
-      return (
-        <div>
-          <div className="report">
-            <div className="spanTitle"><span className="username-text">{reportJobId}</span></div>
-            <div>
-              {error}
-            </div>
-            <Button bsStyle="default" bsSize="xsmall" onClick={this.onClose}>
-              <i className="icon icon-budicon-260" /> Close
-            </Button>
-          </div>
-        </div>
-      );
-    }
-
-    if (!importErrors || !importErrors.size) {
-      return (
-        <div>
-          <div className="report">
-            <div className="spanTitle"><span className="username-text">{reportJobId}</span></div>
-            <div>
-              No errors.
-            </div>
-            <Button bsStyle="default" bsSize="xsmall" onClick={this.onClose}>
-              <i className="icon icon-budicon-260" /> Close
-            </Button>
-          </div>
-        </div>
-      );
-    }
+    const { reportJobId, importErrors } = this.props;
 
     return (
-      <div>
-        <div className="report">
-          <div className="spanTitle"><span className="username-text">{reportJobId}</span></div>
-          <div>
-            {importErrors.map(this.renderError)}
-          </div>
-          <Button bsStyle="default" bsSize="xsmall" onClick={this.onClose}>
-            <i className="icon icon-budicon-260" /> Close
-          </Button>
-        </div>
-      </div>
+      <Modal dialogClassName="job-report-dialog" show={reportJobId !== null} onHide={this.onClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Import Job {reportJobId} Report</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {this.renderErrors(importErrors)}
+        </Modal.Body>
+        <Modal.Footer>
+          <ButtonToolbar>
+            <Button bsSize="small" onClick={this.onClose}>
+              <i className="icon icon-budicon-501"></i> Close
+            </Button>
+          </ButtonToolbar>
+        </Modal.Footer>
+      </Modal>
     );
   }
 }

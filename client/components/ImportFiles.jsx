@@ -12,7 +12,7 @@ class ImportFiles extends Component {
     }
 
     if (file.status === 'completed') {
-      const type = (file.summary || file.summary.get('failed') > 0) ? 'danger' : 'info';
+      const type = (file.summary && file.summary.get('failed') > 0) ? 'danger' : 'info';
       return (
         <TableAction
           id={`open-report-${index}`}
