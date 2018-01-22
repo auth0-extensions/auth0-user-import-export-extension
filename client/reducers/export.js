@@ -92,6 +92,13 @@ export const exportReducer = createReducer(fromJS(initialState), {
         current: 0
       }
     }),
+  [constants.EXPORT_DOWNLOAD_FULFILLED]: state =>
+    state.merge({
+      process: {
+        started: false,
+        current: 0
+      }
+    }),
   [constants.EXPORT_USERS_STARTED]: state =>
     state.merge({
       process: {
@@ -120,6 +127,7 @@ export const exportReducer = createReducer(fromJS(initialState), {
       process: {
         started: true,
         complete: true,
+        jobId: action.payload.jobId,
         current: action.payload.percentage,
         link: action.payload.link
       }
