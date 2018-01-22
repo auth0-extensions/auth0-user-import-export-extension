@@ -2,7 +2,6 @@ import axios from 'axios';
 import uuid from 'node-uuid';
 import * as constants from '../constants';
 import promiseWhile from '../utils/promiseWhile';
-import { importUsers } from "./import";
 
 export function addColumn(name, exportAs) {
   return {
