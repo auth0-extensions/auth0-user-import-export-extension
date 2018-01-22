@@ -11,12 +11,25 @@ class ImportFiles extends Component {
       return <div />;
     }
 
+    if (file.status === 'completed') {
+      const type = (file.summary || file.summary.get('failed') > 0) ? 'danger' : 'info';
+      return (
+        <TableAction
+          id={`open-report-${index}`}
+          type={type} title="Report" icon="260"
+          onClick={this.props.openJobReport} args={[files[index].id]}
+        />
+      );
+    }
+
     return (
-      <TableAction
-        id={`remove-file-${index}`}
-        type="success" title="Remove" icon="263"
-        onClick={this.props.onRemoveFile} args={[ files, index ]}
-      />
+      <div>
+        <TableAction
+          id={`remove-file-${index}`}
+          type="success" title="Remove" icon="263"
+          onClick={this.props.onRemoveFile} args={[ files, index ]}
+        />
+      </div>
     );
   }
 
@@ -45,6 +58,7 @@ class ImportFiles extends Component {
               <TableTextCell>
                 <span style={{ color: colors[file.status] }}>
                   {status[file.status]}
+                  {(file.summary && file.summary.get('failed') > 0) ? ` (${file.summary.get('failed')} errors)` : ''}
                 </span>
               </TableTextCell>
               <TableCell>
@@ -60,7 +74,8 @@ class ImportFiles extends Component {
 
 ImportFiles.propTypes = {
   files: PropTypes.object.isRequired,
-  onRemoveFile: PropTypes.func.isRequired
+  onRemoveFile: PropTypes.func.isRequired,
+  openJobReport: PropTypes.func.isRequired
 };
 
 export default ImportFiles;

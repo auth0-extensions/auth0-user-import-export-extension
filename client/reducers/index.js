@@ -5,6 +5,7 @@ import { routerReducer } from 'react-router-redux';
 import { connectionReducer } from './connection';
 import { exportReducer } from './export';
 import { importReducer } from './import';
+import { reportReducer } from './report';
 import { userReducer } from './user';
 
 export default combineReducers({
@@ -12,6 +13,7 @@ export default combineReducers({
   connection: connectionReducer,
   import: importReducer,
   export: exportReducer,
+  report: reportReducer,
   user: userReducer,
   form: formReducer
 });
