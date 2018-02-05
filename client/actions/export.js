@@ -80,9 +80,24 @@ export function closeExportDialog() {
   };
 }
 
-export function downloadUsersToFile(link) {
-  window.location = link;
-  return closeExportDialog();
+export function downloadUsersToFile(jobId) {
+  return (dispatch) => {
+    dispatch({
+      type: constants.EXPORT_DOWNLOAD,
+      payload: {
+        promise: axios.get(`https://${window.config.AUTH0_DOMAIN}/api/v2/jobs/${jobId}`, {
+          responseType: 'json'
+        })
+      },
+      meta: {
+        onSuccess: (res) => {
+          if (res && res.data && res.data.location) {
+            window.location = res.data.location;
+          }
+        }
+      }
+    });
+  };
 }
 
 export function exportUsers(settings, fields) {
@@ -130,6 +145,7 @@ export function exportUsers(settings, fields) {
             dispatch({
               type: constants.EXPORT_USERS_COMPLETE,
               payload: {
+                jobId,
                 link,
                 percentage: 100
               }

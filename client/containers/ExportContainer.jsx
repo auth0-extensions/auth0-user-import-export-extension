@@ -19,7 +19,7 @@ export class ExportContainer extends Component {
 
   onDownload = () => {
     const data = this.props.export.toJS();
-    this.props.downloadUsersToFile(data.process.link);
+    this.props.downloadUsersToFile(data.process.jobId);
   }
 
   onAddColumn = ({ name, export_as }) => {
