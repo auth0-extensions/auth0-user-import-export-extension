@@ -25,7 +25,7 @@ export function loadCredentials() {
         return;
       }
 
-      axios.defaults.headers.common.Authorization = `Bearer ${decodedToken.access_token}`;
+      axios.defaults.headers.common.Authorization = `Bearer ${apiToken}`;
       sessionStorage.setItem('user-import-export-extension:apiToken', apiToken);
 
       dispatch({

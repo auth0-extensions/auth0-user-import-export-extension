@@ -25,6 +25,7 @@ build/Release
 
 # Dev config
 server/config.json
+server/data.json
 
 # Dependency directory
 node_modules

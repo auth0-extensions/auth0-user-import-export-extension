@@ -42,10 +42,10 @@ export function updateSettings(settings) {
 }
 
 export function getUserCount(connection) {
-  let url = `https://${window.config.AUTH0_DOMAIN}/api/v2/users?per_page=1&page=1&include_totals=true&search_engine=v1`;
+  let url = `/api/users`;
 
   if (connection) {
-    url += `&connection=${connection}`
+    url += `?connection=${connection}`
   }
 
   return {
@@ -59,7 +59,7 @@ export function getUserCount(connection) {
 }
 
 function createJob(settings = {}) {
-  let url = `https://${window.config.AUTH0_DOMAIN}/api/v2/jobs/users-exports`;
+  let url = `/api/jobs/export`;
 
   return axios
     .post(url, settings)
@@ -67,7 +67,7 @@ function createJob(settings = {}) {
 }
 
 function checkJob(id) {
-  let url = `https://${window.config.AUTH0_DOMAIN}/api/v2/jobs/${id}`;
+  let url = `/api/jobs/${id}`;
 
   return axios
     .get(url)
@@ -85,7 +85,7 @@ export function downloadUsersToFile(jobId) {
     dispatch({
       type: constants.EXPORT_DOWNLOAD,
       payload: {
-        promise: axios.get(`https://${window.config.AUTH0_DOMAIN}/api/v2/jobs/${jobId}`, {
+        promise: axios.get(`/api/jobs/${jobId}`, {
           responseType: 'json'
         })
       },

@@ -65,7 +65,7 @@ export function importUsers(files, connectionId) {
         dispatch({
           type: constants.IMPORT_USERS,
           payload: {
-            promise: axios.post(`https://${window.config.AUTH0_DOMAIN}/api/v2/jobs/users-imports`, data, {
+            promise: axios.post(`/api/jobs/import`, data, {
               responseType: 'json'
             })
           },
@@ -91,7 +91,7 @@ export function probeImportStatus() {
       dispatch({
         type: constants.PROBE_IMPORT_STATUS,
         payload: {
-          promise: axios.get(`https://${window.config.AUTH0_DOMAIN}/api/v2/jobs/${currentJob.id}`, {
+          promise: axios.get(`/api/jobs/${currentJob.id}`, {
             responseType: 'json'
           })
         },
@@ -116,7 +116,7 @@ export function getJobReport(jobId) {
     dispatch({
       type: constants.GET_JOB_REPORT,
       payload: {
-        promise: axios.get(`https://${window.config.AUTH0_DOMAIN}/api/v2/jobs/${jobId}/errors`, {
+        promise: axios.get(`/api/jobs/${jobId}/report`, {
           responseType: 'json'
         })
       }

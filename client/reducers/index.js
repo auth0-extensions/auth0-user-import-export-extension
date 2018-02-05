@@ -3,6 +3,7 @@ import { reducer as formReducer } from 'redux-form';
 import { routerReducer } from 'react-router-redux';
 
 import { connectionReducer } from './connection';
+import { historyReducer } from './history';
 import { exportReducer } from './export';
 import { importReducer } from './import';
 import { reportReducer } from './report';
@@ -13,6 +14,7 @@ export default combineReducers({
   connection: connectionReducer,
   import: importReducer,
   export: exportReducer,
+  history: historyReducer,
   report: reportReducer,
   user: userReducer,
   form: formReducer

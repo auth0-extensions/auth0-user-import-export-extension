@@ -16,6 +16,7 @@ class App extends Component {
             <Sidebar>
               <SidebarItem title="Import" route="/import" icon="icon icon-budicon-375" />
               <SidebarItem title="Export" route="/export" icon="icon icon-budicon-322" />
+              <SidebarItem title="History" route="/history" icon="icon icon-budicon-494" />
             </Sidebar>
             <div id="content" className="wrapper col-xs-10">
               { this.props.children }
