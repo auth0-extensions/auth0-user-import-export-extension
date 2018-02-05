@@ -10,3 +10,9 @@ header.dashboard-header nav .navbar-brand {
   top: 2px;
   position: relative;
 }
+
+.modal-body pre {
+  max-height: 500px;
+  top: 2px;
+  position: relative;
+}

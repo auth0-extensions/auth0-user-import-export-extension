@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Button, ButtonToolbar } from 'react-bootstrap';
 
-import { ImportFiles, ImportDropFiles } from '../components';
+import { ImportFiles, ImportDropFiles, JobReportDialog } from '../components';
 import { connectionActions, importActions } from '../actions';
 import { Error, LoadingPanel } from '../components/Dashboard';
 import RequireAuthentication from './RequireAuthentication';
@@ -61,6 +61,7 @@ export class ImportContainer extends Component {
 
   render() {
     const { error, errorCode, currentConnectionId, currentConnectionName, validationErrors, loading, files, currentJob } = this.props;
+
     return (
       <div>
         <ImportDropFiles onDrop={this.onDrop} />
@@ -77,11 +78,16 @@ export class ImportContainer extends Component {
             </ButtonToolbar>
           </div>
         </div>
-
         <LoadingPanel show={loading} animationStyle={{ paddingTop: '5px', paddingBottom: '5px' }}>
           <Error message={this.renderError(error, errorCode, currentConnectionId, currentConnectionName)} errors={validationErrors} onDismiss={this.props.dismissError} />
-          <ImportFiles files={files} onRemoveFile={this.props.removeFile} />
+          <ImportFiles files={files} onRemoveFile={this.props.removeFile} openJobReport={this.props.openJobReport}/>
         </LoadingPanel>
+        {this.props.reportJobId === null ? ''
+        : <JobReportDialog
+            reportJobId={this.props.reportJobId}
+            getJobReport={this.props.getJobReport}
+            closeJobReport={this.props.closeJobReport}
+          />}
       </div>
     );
   }
@@ -94,14 +100,19 @@ ImportContainer.propTypes = {
   handleFileDrop: PropTypes.func.isRequired,
   importUsers: PropTypes.func.isRequired,
   clearForm: PropTypes.func.isRequired,
+  getJobReport: PropTypes.func.isRequired,
+  openJobReport: PropTypes.func.isRequired,
+  closeJobReport: PropTypes.func.isRequired,
   fetchConnections: PropTypes.func.isRequired,
   dismissError: PropTypes.func.isRequired,
-  removeFile: PropTypes.func.isRequired
+  removeFile: PropTypes.func.isRequired,
+  reportJobId: PropTypes.string
 };
 
 function mapStateToProps(state) {
   return {
     user: state.user,
+    reportJobId: state.report.get('reportJobId'),
     connections: state.connection.get('records'),
     files: state.import.get('files'),
     currentJob: state.import.get('currentJob'),

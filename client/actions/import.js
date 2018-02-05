@@ -109,6 +109,22 @@ export function probeImportStatus() {
 }
 
 /*
+ * Get the report for a job.
+ */
+export function getJobReport(jobId) {
+  return (dispatch) => {
+    dispatch({
+      type: constants.GET_JOB_REPORT,
+      payload: {
+        promise: axios.get(`https://${window.config.AUTH0_DOMAIN}/api/v2/jobs/${jobId}/errors`, {
+          responseType: 'json'
+        })
+      }
+    });
+  };
+}
+
+/*
  * Cancel any pending jobs and clear form.
  */
 export function clearForm() {
@@ -148,7 +164,7 @@ export function handleFileDrop(currentFiles, newFiles) {
   const errors = [];
   const files = currentFiles.concat(newFiles);
   for (let i = 0; i < newFiles.length; i++) {
-    const file = files[i];
+    const file = newFiles[i];
     file.status = 'queued';
 
     if (file.type && file.type.indexOf('text/json') !== 0 && file.type.indexOf('application/json') !== 0) {
@@ -177,6 +193,21 @@ export function handleFileDrop(currentFiles, newFiles) {
     payload: {
       files
     }
+  };
+}
+
+export function openJobReport(jobId) {
+  return {
+    type: constants.SHOW_JOB_REPORT,
+    payload: {
+      jobId: jobId
+    }
+  };
+}
+
+export function closeJobReport() {
+  return {
+    type: constants.HIDE_JOB_REPORT
   };
 }
 

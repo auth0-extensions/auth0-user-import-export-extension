@@ -103,12 +103,11 @@ export const importReducer = createReducer(fromJS(initialState), {
     }),
   [constants.PROBE_IMPORT_STATUS_FULFILLED]: (state, action) => {
     const job = fromJS(action.payload.data);
-
     const updatedFiles = [];
-    const currentJobIndex = state.get('currentJobIndex');
     state.get('files').toJS().map((file) => {
       if (file.id === action.meta.currentJobId) {
         file.status = job.get('status');
+        file.summary = job.get('summary');
       }
       updatedFiles.push(file);
     });
