@@ -1,4 +1,6 @@
+const _ = require('lodash');
 const express = require('express');
+const formidable = require('formidable');
 const middlewares = require('auth0-extension-express-tools').middlewares;
 
 const config = require('./lib/config');
@@ -18,13 +20,24 @@ module.exports = (storage) => {
     }
   }));
 
-  // create job
-  api.post('/jobs/:type', (req, res, next) => {
-    if (req.params.type !== 'import' && req.params.type !== 'export') {
-      return res.status(404).send();
-    }
+  // create import job
+  api.post('/jobs/import', (req, res, next) => {
+    const form = new formidable.IncomingForm();
+    form.keepExtensions = true;
+    form.parse(req, function(err, fields, files) {
+      if (err) {
+        return next(err);
+      }
 
-    jobs.create(req.body, req.params.type, storage, req.user.access_token)
+      jobs.usersImport(fields.connection_id, files.users, storage, req.user.access_token)
+        .then(job => res.json(job))
+        .catch(next);
+    });
+  });
+
+  // create export job
+  api.post('/jobs/export', (req, res, next) => {
+    jobs.usersExport(req.body, storage, req.user.access_token)
       .then(job => res.json(job))
       .catch(next);
   });

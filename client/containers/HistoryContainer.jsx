@@ -5,12 +5,12 @@ import { Error, LoadingPanel } from 'auth0-extension-ui';
 
 import { historyActions, importActions, exportActions } from '../actions';
 
-import HistoryTable from '../components/HistoryTable';
-import HistoryDialog from '../components/HistoryDialog';
+import { HistoryTable, JobReportDialog } from '../components';
 
 export default connectContainer(class extends Component {
   static stateToProps = (state) => ({
-    history: state.history
+    history: state.history,
+    reportJobId: state.report.get('reportJobId')
   });
 
   static actionsToProps = {
@@ -20,14 +20,20 @@ export default connectContainer(class extends Component {
   }
 
   static propTypes = {
-    history: PropTypes.array.isRequired,
+    history: PropTypes.object.isRequired,
     fetchJobs: PropTypes.func.isRequired,
-    checkJob: PropTypes.func.isRequired,
+    checkJobStatus: PropTypes.func.isRequired,
     downloadUsersToFile: PropTypes.func.isRequired,
+    getJobReport: PropTypes.func.isRequired,
+    openJobReport: PropTypes.func.isRequired,
     getImportErrors: PropTypes.func.isRequired,
-    openDialog: PropTypes.func.isRequired,
-    closeDialog: PropTypes.func.isRequired
+    closeJobReport: PropTypes.func.isRequired,
+    reportJobId: PropTypes.string
   }
+
+  checkStatus = (type, id) => {
+    this.props.checkJobStatus(id);
+  };
 
   componentWillMount() {
     this.props.fetchJobs();
@@ -49,8 +55,19 @@ export default connectContainer(class extends Component {
             </div>
             <div className="col-xs-12">
               <Error message={error} />
-              <HistoryTable error={error} records={records} showDialog={this.props.openDialog} checkStatus={this.props.checkJob} downloadUsers={this.props.downloadUsersToFile} />
-              <HistoryDialog deployment={activeRecord} onClose={this.props.closeDialog} />
+              <HistoryTable
+                error={error}
+                records={records}
+                showDialog={this.props.openJobReport}
+                checkStatus={this.checkStatus}
+                downloadUsers={this.props.downloadUsersToFile}
+              />
+              {this.props.reportJobId === null ? ''
+                : <JobReportDialog
+                  reportJobId={this.props.reportJobId}
+                  getJobReport={this.props.getJobReport}
+                  closeJobReport={this.props.closeJobReport}
+                />}
             </div>
           </div>
         </LoadingPanel>

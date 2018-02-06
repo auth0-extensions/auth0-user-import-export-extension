@@ -1,15 +1,31 @@
 import axios from 'axios';
-import uuid from 'node-uuid';
 import * as constants from '../constants';
-import promiseWhile from '../utils/promiseWhile';
 
 export function fetchJobs() {
   return {
     type: constants.FETCH_JOBS_LIST,
     payload: {
-      promise: axios.get('/api/history', {
+      promise: axios.get(`${window.config.BASE_URL}/api/history`, {
         responseType: 'json'
       })
     }
   };
+}
+
+export function checkJobStatus(id) {
+  return (dispatch) => {
+    dispatch({
+      type: constants.CHECK_JOB_STATUS,
+      payload: {
+        promise: axios.get(`${window.config.BASE_URL}/api/jobs/${id}`, {
+          responseType: 'json'
+        })
+      },
+      meta: {
+        onSuccess: () => {
+          dispatch(fetchJobs());
+        }
+      }
+    });
+  }
 }

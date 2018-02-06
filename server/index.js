@@ -18,7 +18,7 @@ module.exports = (configProvider, storageProvider) => {
     : new storageTools.FileStorageContext(path.join(__dirname, './data.json'), { mergeWrites: true });
 
   const app = express();
-
+  app.use('/app', express.static(path.join(__dirname, '../build')));
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false }));
 

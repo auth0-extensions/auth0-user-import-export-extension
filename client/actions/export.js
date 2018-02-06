@@ -42,7 +42,7 @@ export function updateSettings(settings) {
 }
 
 export function getUserCount(connection) {
-  let url = `/api/users`;
+  let url = `${window.config.BASE_URL}/api/users`;
 
   if (connection) {
     url += `?connection=${connection}`
@@ -59,7 +59,7 @@ export function getUserCount(connection) {
 }
 
 function createJob(settings = {}) {
-  let url = `/api/jobs/export`;
+  let url = `${window.config.BASE_URL}/api/jobs/export`;
 
   return axios
     .post(url, settings)
@@ -67,7 +67,7 @@ function createJob(settings = {}) {
 }
 
 function checkJob(id) {
-  let url = `/api/jobs/${id}`;
+  let url = `${window.config.BASE_URL}/api/jobs/${id}`;
 
   return axios
     .get(url)
@@ -85,7 +85,7 @@ export function downloadUsersToFile(jobId) {
     dispatch({
       type: constants.EXPORT_DOWNLOAD,
       payload: {
-        promise: axios.get(`/api/jobs/${jobId}`, {
+        promise: axios.get(`${window.config.BASE_URL}/api/jobs/${jobId}`, {
           responseType: 'json'
         })
       },

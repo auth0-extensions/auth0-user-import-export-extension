@@ -19,6 +19,7 @@
       "ejs",
       "express",
       "express-jwt",
+      "formidable",
       "iconv-lite",
       "lodash",
       "lru-cache",
@@ -56,6 +57,7 @@
     "comma-separated-values": "^3.6.4",
     "ejs": "^2.4.1",
     "express": "^4.13.4",
+    "formidable": "1.0.17",
     "lodash": "^4.8.2",
     "nconf": "^0.8.4",
     "request": "^2.71.0",
@@ -147,7 +149,6 @@
     "client:build": "cross-env NODE_ENV=production webpack --config ./build/ui/webpack.config.prod.js --colors -p",
     "serve:dev": "cross-env NODE_ENV=development gulp run --gulpfile ./build/gulpfile.js",
     "serve:prod": "cross-env NODE_ENV=production node index.js",
-    "postinstall": "npm run client:build",
     "extension:build": "a0-ext build:server ./webtask.js ./dist && cp ./dist/auth0-user-import-export.extension.$npm_package_version.js ./build/bundle.js",
     "extension:size": "cross-env NODE_ENV=production webpack -p --config ./build/webtask/webpack.config.js --json > ./build/webtask/bundle-size.json && node ./build/webtask/bundle-size.js",
     "build": "npm run client:build && npm run extension:build"

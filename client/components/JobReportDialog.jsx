@@ -8,7 +8,7 @@ export class JobReportDialog extends Component {
     getJobReport: PropTypes.func.isRequired,
     loading: PropTypes.bool.isRequired,
     closeJobReport: PropTypes.func.isRequired,
-    importErrors: PropTypes.array
+    importErrors: PropTypes.object
   }
 
   componentWillMount() {
@@ -47,7 +47,7 @@ export class JobReportDialog extends Component {
       );
     }
 
-    return 'No errors';
+    return <div className="report-success">Job was completed successfully.</div>;
   }
 
   render() {
@@ -56,7 +56,7 @@ export class JobReportDialog extends Component {
     return (
       <Modal dialogClassName="job-report-dialog" show={reportJobId !== null} onHide={this.onClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Import Job {reportJobId} Report</Modal.Title>
+          <Modal.Title>Job {reportJobId} Report</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {this.renderErrors(importErrors)}

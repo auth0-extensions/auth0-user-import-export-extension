@@ -11,10 +11,56 @@ export default class HistoryTable extends Component {
     records: React.PropTypes.array.isRequired
   };
 
+  renderRow = (record, index) => {
+    let action, button, color, title;
+    let status = record.status;
+
+    const icon = (record.type === 'import') ? '446' : '447';
+
+    if (record.status === 'pending') {
+      action = () => this.props.checkStatus(record.type, record.id);
+      color = '#f1cd13';
+      title = 'Check Status';
+      button = '436';
+    } else if (status === 'failed' || record.type === 'import') {
+      console.log(record.summary, record.summary.failed);
+      action = () => this.props.showDialog(record.id);
+      color = (status === 'failed') ? '#e22b28' : '#329743';
+      title = 'Show Summary';
+      button = '692';
+      if (record.summary && record.summary.failed) {
+        color = '#f1cd13';
+        status += ` (${record.summary.failed} of ${record.summary.total} failed)`;
+      }
+    } else {
+      action = () => this.props.downloadUsers(record.id);
+      color = '#329743';
+      title = 'Download Users';
+      button = '722';
+    }
+
+    return (
+      <TableRow key={index}>
+        <TableIconCell color={color} icon={icon} />
+        <TableTextCell>{record.type}</TableTextCell>
+        <TableTextCell>{record.date}</TableTextCell>
+        <TableTextCell>{status}</TableTextCell>
+        <TableCell>
+          <ButtonToolbar style={{ marginBottom: '0px' }}>
+            <TableAction
+              id={`view-${index}`} type="default" title={title} icon={button}
+              onClick={action}
+            />
+          </ButtonToolbar>
+        </TableCell>
+      </TableRow>
+    );
+  };
+
   render() {
     const { error, records } = this.props;
 
-    if (!error && records.size === 0) {
+    if (!error && (!records || records.length === 0)) {
       return <div>There are no jobs available.</div>;
     }
 
@@ -22,50 +68,14 @@ export default class HistoryTable extends Component {
       <div>
         <Table>
           <TableHeader>
-            <TableColumn width="5%" />
-            <TableColumn width="25%">Type</TableColumn>
-            <TableColumn width="25%">Date</TableColumn>
-            <TableColumn width="25%">Status</TableColumn>
-            <TableColumn width="20%" />
+            <TableColumn width="3%" />
+            <TableColumn width="12%">Type</TableColumn>
+            <TableColumn width="37%">Date</TableColumn>
+            <TableColumn width="40%">Status</TableColumn>
+            <TableColumn width="7%" />
           </TableHeader>
           <TableBody>
-            {records.map((record, index) => {
-              let action, icon, color, title;
-
-              if (record.status === 'Pending') {
-                action = () => this.props.checkStatus(record.id);
-                color = 'yellow';
-                title = 'Check Status';
-                icon = '446';
-              } else if (record.status === 'Failed' || record.type === 'import') {
-                action = () => this.props.showDialog(record.id);
-                color = record.status === 'Failed' ? 'red' : 'green';
-                title = 'Show Summary';
-                icon = '445';
-              } else {
-                action = () => this.props.downloadUsers(record.id);
-                color = 'green';
-                title = 'Download Users';
-                icon = '444';
-              }
-
-              return (
-                <TableRow key={index}>
-                  <TableIconCell color={color} icon="447" />
-                  <TableTextCell>{record.type}</TableTextCell>
-                  <TableTextCell>{record.date}</TableTextCell>
-                  <TableTextCell>{record.status}</TableTextCell>
-                  <TableCell>
-                    <ButtonToolbar style={{ marginBottom: '0px' }}>
-                      <TableAction
-                        id={`view-${index}`} type="default" title={title} icon={icon}
-                        onClick={action}
-                      />
-                    </ButtonToolbar>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
+            {records.reverse().map(this.renderRow)}
           </TableBody>
         </Table>
       </div>

@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { push } from 'react-router-redux';
 import { isTokenExpired, decodeToken } from '../utils/auth';
 import * as constants from '../constants';
 
