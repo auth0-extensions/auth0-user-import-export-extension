@@ -35,12 +35,16 @@ export default connectContainer(class extends Component {
     this.props.checkJobStatus(id);
   };
 
+  downloadUsers = (id) => {
+    this.props.downloadUsersToFile(id, this.props.fetchJobs);
+  };
+
   componentWillMount() {
     this.props.fetchJobs();
   }
 
   render() {
-    const { error, records, loading, activeRecord } = this.props.history.toJS();
+    const { error, records, loading } = this.props.history.toJS();
 
     return (
       <div>
@@ -60,7 +64,7 @@ export default connectContainer(class extends Component {
                 records={records}
                 showDialog={this.props.openJobReport}
                 checkStatus={this.checkStatus}
-                downloadUsers={this.props.downloadUsersToFile}
+                downloadUsers={this.downloadUsers}
               />
               {this.props.reportJobId === null ? ''
                 : <JobReportDialog

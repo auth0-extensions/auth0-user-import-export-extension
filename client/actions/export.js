@@ -80,7 +80,7 @@ export function closeExportDialog() {
   };
 }
 
-export function downloadUsersToFile(jobId) {
+export function downloadUsersToFile(jobId, onExpired) {
   return (dispatch) => {
     dispatch({
       type: constants.EXPORT_DOWNLOAD,
@@ -93,6 +93,8 @@ export function downloadUsersToFile(jobId) {
         onSuccess: (res) => {
           if (res && res.data && res.data.location) {
             window.location = res.data.location;
+          } else if (res && res.data && res.data.status === 'expired' && onExpired) {
+            dispatch(onExpired());
           }
         }
       }

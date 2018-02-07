@@ -17,7 +17,7 @@ export default class HistoryTable extends Component {
 
     const icon = (record.type === 'import') ? '446' : '447';
 
-    if (record.status === 'pending') {
+    if (status === 'pending') {
       action = () => this.props.checkStatus(record.type, record.id);
       color = '#f1cd13';
       title = 'Check Status';
@@ -49,7 +49,7 @@ export default class HistoryTable extends Component {
           <ButtonToolbar style={{ marginBottom: '0px' }}>
             <TableAction
               id={`view-${index}`} type="default" title={title} icon={button}
-              onClick={action}
+              onClick={action} disabled={status === 'expired'}
             />
           </ButtonToolbar>
         </TableCell>
