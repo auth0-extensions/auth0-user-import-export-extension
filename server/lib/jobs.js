@@ -44,8 +44,6 @@ module.exports = {
         .set('accept', 'json')
         .set('Authorization', `Bearer ${token}`)
         .end((err, res) => {
-          console.log(token);
-          console.log(res.body);
           if (err) {
             return reject(err);
           }
