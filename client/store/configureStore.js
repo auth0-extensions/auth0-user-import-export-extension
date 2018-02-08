@@ -6,6 +6,7 @@ import { compose, createStore, applyMiddleware } from 'redux';
 import rootReducer from '../reducers';
 import DevTools from '../containers/DevTools';
 import promiseSuccessMiddleware from '../middlewares/promiseSuccessMiddleware';
+import handleUnauthorizedMiddleware from '../middlewares/handleUnauthorizedMiddleware';
 
 export default function configureStore(middlewares, initialState = { }) {
   const pipeline = [
@@ -13,6 +14,7 @@ export default function configureStore(middlewares, initialState = { }) {
       promiseMiddleware(),
       thunkMiddleware,
       promiseSuccessMiddleware(),
+      handleUnauthorizedMiddleware(),
       createLogger({
         predicate: () => process.env.NODE_ENV !== 'production'
       }),

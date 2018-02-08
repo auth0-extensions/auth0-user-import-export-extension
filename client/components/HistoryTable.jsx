@@ -23,7 +23,6 @@ export default class HistoryTable extends Component {
       title = 'Check Status';
       button = '436';
     } else if (status === 'failed' || record.type === 'import') {
-      console.log(record.summary, record.summary.failed);
       action = () => this.props.showDialog(record.id);
       color = (status === 'failed') ? '#e22b28' : '#329743';
       title = 'Show Summary';
