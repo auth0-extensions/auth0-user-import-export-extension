@@ -23,11 +23,10 @@ export default connectContainer(class extends Component {
     history: PropTypes.object.isRequired,
     fetchJobs: PropTypes.func.isRequired,
     checkJobStatus: PropTypes.func.isRequired,
-    downloadUsersToFile: PropTypes.func.isRequired,
     getJobReport: PropTypes.func.isRequired,
     openJobReport: PropTypes.func.isRequired,
-    getImportErrors: PropTypes.func.isRequired,
     closeJobReport: PropTypes.func.isRequired,
+    getImportErrors: PropTypes.func,
     reportJobId: PropTypes.string
   }
 
@@ -36,7 +35,7 @@ export default connectContainer(class extends Component {
   };
 
   downloadUsers = (id) => {
-    this.props.downloadUsersToFile(id, this.props.fetchJobs);
+    this.props.checkJobStatus(id, true);
   };
 
   componentWillMount() {

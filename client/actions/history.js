@@ -12,7 +12,7 @@ export function fetchJobs() {
   };
 }
 
-export function checkJobStatus(id) {
+export function checkJobStatus(id, download) {
   return (dispatch) => {
     dispatch({
       type: constants.CHECK_JOB_STATUS,
@@ -22,8 +22,10 @@ export function checkJobStatus(id) {
         })
       },
       meta: {
-        onSuccess: () => {
-          dispatch(fetchJobs());
+        onSuccess: (payload) => {
+          if (download && payload && payload.data && payload.data.status === 'completed' && payload.data.location) {
+            window.location =  payload.data.location;
+          }
         }
       }
     });
