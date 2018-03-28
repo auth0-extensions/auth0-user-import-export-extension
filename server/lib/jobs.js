@@ -20,17 +20,17 @@ module.exports = {
             return reject(err);
           }
 
-          if (res.status >= 200 && res.status <= 300) {
-            const job = {
-              id: res.body.id,
-              type: 'import'
-            };
-
-            return history(job, storage)
-              .then(() => resolve(res.body));
+          if (res && res.status >= 300) {
+            return reject(res.error || res.body || res);
           }
 
-          return reject((res && res.error) || res);
+          const job = {
+            id: res.body.id,
+            type: 'import'
+          };
+
+          return history(job, storage)
+            .then(() => resolve(res.body));
         })
     });
   },

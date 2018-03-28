@@ -86,17 +86,19 @@ export function importUsers(files, connectionId) {
 export function probeImportStatus(jobId) {
   return (dispatch, getState) => {
     const reducer = getState().import;
-    const currentJob = reducer.toJS().currentJob;
-    if ((currentJob && currentJob.id) || jobId) {
+    const currentJob = reducer.toJS().currentJob || {};
+    const currentJobId = jobId || currentJob.id;
+
+    if (currentJobId) {
       dispatch({
         type: constants.PROBE_IMPORT_STATUS,
         payload: {
-          promise: axios.get(`${window.config.BASE_URL}/api/jobs/${jobId || currentJob.id}`, {
+          promise: axios.get(`${window.config.BASE_URL}/api/jobs/${currentJobId}`, {
             responseType: 'json'
           })
         },
         meta: {
-          currentJobId: jobId || currentJob.id,
+          currentJobId: currentJobId,
           onSuccess: (res) => {
             if (res && res.data && res.data.status && res.data.status !== 'pending') {
               dispatch(importUsers(reducer.get('files'), reducer.get('connectionId')));
