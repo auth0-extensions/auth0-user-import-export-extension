@@ -16,11 +16,11 @@ module.exports = {
         .field('connection_id', connection)
         .attach('users', file.path)
         .end((err, res) => {
-          if (err) {
-            return reject(err);
+          if (err || !res) {
+            return reject(err || 'Unknown error');
           }
 
-          if (res && res.status >= 300) {
+          if (res.status >= 300) {
             return reject(res.error || res.body || res);
           }
 
@@ -44,11 +44,11 @@ module.exports = {
         .set('accept', 'json')
         .set('Authorization', `Bearer ${token}`)
         .end((err, res) => {
-          if (err) {
-            return reject(err);
+          if (err || !res) {
+            return reject(err || 'Unknown error');
           }
 
-          if (res && res.status >= 300) {
+          if (res.status >= 300) {
             return reject(res.error || res.body || res);
           }
 
@@ -71,11 +71,11 @@ module.exports = {
         .set('accept', 'json')
         .set('Authorization', `Bearer ${token}`)
         .end((err, res) => {
-          if (err) {
-            return reject(err);
+          if (err || !res) {
+            return reject(err || 'Unknown error');
           }
 
-          if (res && res.status >= 300) {
+          if (res.status >= 300) {
             return reject(res.error || res.body || res);
           }
 
@@ -98,11 +98,11 @@ module.exports = {
         .set('accept', 'json')
         .set('Authorization', `Bearer ${token}`)
         .end((err, res) => {
-          if (err) {
-            return reject(err);
+          if (err || !res) {
+            return reject(err || 'Unknown error');
           }
 
-          if (res && res.status >= 300) {
+          if (res.status >= 300) {
             return reject(res.error || res.body || res);
           }
 
