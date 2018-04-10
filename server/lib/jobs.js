@@ -106,6 +106,10 @@ module.exports = {
             return reject(res.error || res.body || res);
           }
 
+          if (res.status === 204) {
+            return resolve([ 'Failed to parse users file when importing users.' ]);
+          }
+
           return resolve(res.body);
         })
     });

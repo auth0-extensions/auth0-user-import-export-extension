@@ -23,15 +23,58 @@ const makeRequest = (url, token) => {
   });
 };
 
-module.exports = {
-  getConnections: (strategy, token) => {
-    let url = `https://${config('AUTH0_DOMAIN')}/api/v2/connections`;
-    if (strategy) {
-      url += '?strategy=auth0';
-    }
+const getConnections = (strategy, token) => {
+  const concurrency = 5;
+  const perPage = 100;
+  const result = [];
+  const url = `https://${config('AUTH0_DOMAIN')}/api/v2/connections`;
 
-    return makeRequest(url, token);
-  },
+  let total = 0;
+  let pageCount = 0;
+  let query = `?per_page=${perPage}`;
+  if (strategy) {
+    query += '&strategy=auth0';
+  }
+  const getTotals = () => {
+    const totalsUrl = `${url}${query}&page=0&include_totals=true`;
+    return makeRequest(totalsUrl, token)
+      .then((response) => {
+        total = response.total || 0;
+        pageCount = Math.ceil(total / perPage);
+        const data = response.connections || response || [];
+        data.forEach(item => result.push(item));
+        return null;
+      });
+  };
+
+  const getPage = (page) => {
+    const pageUrl = `${url}${query}&page=${page}`;
+    return makeRequest(pageUrl, token)
+      .then((response) => {
+        response.forEach(item => result.push(item));
+        return null;
+      });
+  };
+
+  const getAll = () =>
+    getTotals()
+      .then(() => {
+        if (total === 0 || result.length >= total) {
+          return result;
+        }
+
+        const pages = [];
+        for (let i = 1; i <= pageCount; i++) {
+          pages.push(i);
+        }
+
+        return Promise.map(pages, getPage, { concurrency });
+      });
+
+  return getAll().then(() => result);
+};
+
+module.exports = {
   getUsersCount: (connection, token) => {
     let url = `https://${config('AUTH0_DOMAIN')}/api/v2/users?per_page=1&page=0&include_totals=true&search_engine=v1`;
     if (connection) {
@@ -39,5 +82,6 @@ module.exports = {
     }
 
     return makeRequest(url, token);
-  }
+  },
+  getConnections
 };
