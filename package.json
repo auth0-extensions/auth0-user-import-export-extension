@@ -4,7 +4,8 @@
   "description": "An extension that allows you to import and export users to your Auth0 account",
   "main": "server.js",
   "auth0-extension": {
-    "bundleModules": false
+    "bundleModules": false,
+    "useBabel": false
   },
   "dependencies": {
     "auth0": "^2.4.0",
