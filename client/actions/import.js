@@ -65,7 +65,7 @@ export function importUsers(files, connectionId) {
         dispatch({
           type: constants.IMPORT_USERS,
           payload: {
-            promise: axios.post(`https://${window.config.AUTH0_DOMAIN}/api/v2/jobs/users-imports`, data, {
+            promise: axios.post(`${window.config.BASE_URL}/api/jobs/import`, data, {
               responseType: 'json'
             })
           },
@@ -83,20 +83,22 @@ export function importUsers(files, connectionId) {
 /*
  * Get the status of a job.
  */
-export function probeImportStatus() {
+export function probeImportStatus(jobId) {
   return (dispatch, getState) => {
     const reducer = getState().import;
-    const currentJob = reducer.toJS().currentJob;
-    if (currentJob && currentJob.id) {
+    const currentJob = reducer.toJS().currentJob || {};
+    const currentJobId = jobId || currentJob.id;
+
+    if (currentJobId) {
       dispatch({
         type: constants.PROBE_IMPORT_STATUS,
         payload: {
-          promise: axios.get(`https://${window.config.AUTH0_DOMAIN}/api/v2/jobs/${currentJob.id}`, {
+          promise: axios.get(`${window.config.BASE_URL}/api/jobs/${currentJobId}`, {
             responseType: 'json'
           })
         },
         meta: {
-          currentJobId: currentJob.id,
+          currentJobId: currentJobId,
           onSuccess: (res) => {
             if (res && res.data && res.data.status && res.data.status !== 'pending') {
               dispatch(importUsers(reducer.get('files'), reducer.get('connectionId')));
@@ -116,7 +118,7 @@ export function getJobReport(jobId) {
     dispatch({
       type: constants.GET_JOB_REPORT,
       payload: {
-        promise: axios.get(`https://${window.config.AUTH0_DOMAIN}/api/v2/jobs/${jobId}/errors`, {
+        promise: axios.get(`${window.config.BASE_URL}/api/jobs/${jobId}/report`, {
           responseType: 'json'
         })
       }

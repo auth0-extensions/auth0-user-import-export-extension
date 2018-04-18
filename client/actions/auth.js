@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { push } from 'react-router-redux';
 import { isTokenExpired, decodeToken } from '../utils/auth';
 import * as constants from '../constants';
 
@@ -25,7 +24,7 @@ export function loadCredentials() {
         return;
       }
 
-      axios.defaults.headers.common.Authorization = `Bearer ${decodedToken.access_token}`;
+      axios.defaults.headers.common.Authorization = `Bearer ${apiToken}`;
       sessionStorage.setItem('user-import-export-extension:apiToken', apiToken);
 
       dispatch({

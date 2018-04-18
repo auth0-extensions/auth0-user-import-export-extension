@@ -16,3 +16,7 @@ header.dashboard-header nav .navbar-brand {
   top: 2px;
   position: relative;
 }
+
+.report-success {
+  text-align: center;
+}

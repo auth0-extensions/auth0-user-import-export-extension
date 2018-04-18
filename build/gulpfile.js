@@ -12,15 +12,20 @@ gulp.task('run', () => {
     }
 
     nodemon({
-      script: './ui/devserver.js',
+      script: './build/ui/devserver.js',
       ext: 'js json',
+      cwd: path.join(__dirname, '/../'),
       env: {
         NODE_ENV: 'development',
-        WT_URL: url
+        WT_URL: url,
+        PUBLIC_WT_URL: url
       },
       ignore: [
+        path.join(__dirname, '../server/data.json'),
+        path.join(__dirname, '../server/config.json'),
         path.join(__dirname, '../build/'),
         path.join(__dirname, '../client/'),
+        path.join(__dirname, '../tests/'),
         path.join(__dirname, '../node_modules/')
       ]
     });

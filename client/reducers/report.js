@@ -20,7 +20,7 @@ export const reportReducer = createReducer(fromJS(initialState), {
   [constants.GET_JOB_REPORT_REJECTED]: (state, action) =>
     state.merge({
       loading: false,
-      error: `An error occured while trying to get the status of the import job: ${action.payload.message || action.payload.statusText}`,
+      error: `An error occurred while trying to get the status of the job: ${action.payload.message || action.payload.statusText}`,
       importErrors: null
     }),
   [constants.GET_JOB_REPORT_FULFILLED]: (state, action) => {

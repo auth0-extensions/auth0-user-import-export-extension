@@ -1,17 +1,24 @@
+const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
 const tools = require('auth0-extension-express-tools');
+const storageTools = require('auth0-extension-tools');
 
 const logger = require('./lib/logger');
 const config = require('./lib/config');
 const metadata = require('../webtask.json');
 const htmlRoute = require('./htmlRoute');
+const api = require('./api');
 
-module.exports = (configProvider) => {
+module.exports = (configProvider, storageProvider) => {
   config.setProvider(configProvider);
 
-  const app = express();
+  const storage = storageProvider
+    ? new storageTools.WebtaskStorageContext(storageProvider, { force: 1 })
+    : new storageTools.FileStorageContext(path.join(__dirname, './data.json'), { mergeWrites: true });
 
+  const app = express();
+  app.use('/app', express.static(path.join(__dirname, '../build')));
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -31,6 +38,7 @@ module.exports = (configProvider) => {
     scopes: 'create:users read:users read:connections create:passwords_checking_job'
   }));
 
+  app.use('/api', api(storage));
   app.get('*', htmlRoute());
 
   // Generic error handler.
