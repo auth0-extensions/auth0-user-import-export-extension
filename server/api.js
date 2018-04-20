@@ -14,7 +14,7 @@ module.exports = (storage) => {
     credentialsRequired: true,
     secret: config('EXTENSION_SECRET'),
     audience: 'urn:user-import-export-extension',
-    baseUrl: config('WT_URL'),
+    baseUrl: config('PUBLIC_WT_URL') || config('WT_URL'),
     onLoginSuccess: (req, res, next) => {
       next();
     }
