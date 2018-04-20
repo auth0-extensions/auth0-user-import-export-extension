@@ -288,9 +288,9 @@ auth0-api-jwt-rsa-validation@0.0.1:
     lru-cache "^3.2.0"
     request "^2.67.0"
 
-auth0-extension-express-tools@1.1.5:
-  version "1.1.5"
-  resolved "https://registry.yarnpkg.com/auth0-extension-express-tools/-/auth0-extension-express-tools-1.1.5.tgz#f40f784430b557f4176009ea3352e7c1cc323afd"
+auth0-extension-express-tools@1.1.6:
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/auth0-extension-express-tools/-/auth0-extension-express-tools-1.1.6.tgz#6dcc6e9efe7b5d839dd3f6d09ecac8298bb92af6"
   dependencies:
     auth0-extension-tools "^1.3.0"
     cookie-parser "^1.4.3"
@@ -7995,7 +7995,7 @@ ua-parser-js@^0.7.9:
   version "0.7.11"
   resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.11.tgz#3741e2dd2fb09251a960f9ef076cd0cc72eaf6a0"
 
-uglify-js@^2.6.1, uglify-js@^2.8.27:
+uglify-js@^2.4.19, uglify-js@^2.6.1, uglify-js@^2.8.27:
   version "2.8.29"
   resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-2.8.29.tgz#29c5733148057bb4e1f75df35b7a9cb72e6a59dd"
   dependencies:
