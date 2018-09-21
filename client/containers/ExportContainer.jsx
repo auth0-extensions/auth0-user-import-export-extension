@@ -34,6 +34,11 @@ export class ExportContainer extends Component {
   getExportTitle(query) {
     if (query && query.size) {
       const size = query.size;
+
+      if (size === 1000) {
+        return `Export ${size}+ Users`;
+      }
+
       return  size > 1 ? `Export ${size} Users` : `Export 1 User`;
     }
     return 'Export Users';
