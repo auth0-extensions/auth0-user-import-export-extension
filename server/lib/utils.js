@@ -76,7 +76,7 @@ const getConnections = (strategy, token) => {
 
 module.exports = {
   getUsersCount: (connection, token) => {
-    let url = `https://${config('AUTH0_DOMAIN')}/api/v2/users?per_page=1&page=0&include_totals=true&search_engine=v2`;
+    let url = `https://${config('AUTH0_DOMAIN')}/api/v2/users?per_page=1&page=0&include_totals=true&search_engine=v3`;
     if (connection) {
       url += `&q=identities.connection:"${connection}"`
     }
