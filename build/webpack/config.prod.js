@@ -5,7 +5,7 @@ const StatsWriterPlugin = require('webpack-stats-plugin').StatsWriterPlugin;
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const project = require('../../package.json');
-const config = require('./webpack.config.base.js');
+const config = require('./config.base.js');
 config.profile = false;
 
 // Build output, which includes the hash.

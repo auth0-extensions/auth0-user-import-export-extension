@@ -1,7 +1,7 @@
 const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
 
-const config = require('./webpack.config.dev.js');
+const config = require('./config.dev.js');
 
 const options = {
   publicPath: 'http://localhost:3001/app/',
@@ -32,6 +32,6 @@ new WebpackDevServer(webpack(config), options)
         console.log('Webpack server listening on: http://localhost:3001');
 
         // Start the actual server.
-        require('../../index');
+        require('../../index.js');
       }
     });
