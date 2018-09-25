@@ -19,16 +19,13 @@
   "auth0": {
     "scopes": "create:users read:users read:connections create:passwords_checking_job"
   },
-  "environments": [
-    {
-      "name": "appliance",
-      "overrides": {
-        "version": "1.7.0",
-        "preVersion": "1.7.0",
-        "auth0": {
-          "scopes": "create:users read:users read:connections"
-        }
+  "environments": {
+    "appliance": {
+      "version": "1.7.0",
+      "preVersion": "1.7.0",
+      "auth0": {
+        "scopes": "create:users read:users read:connections"
       }
     }
-  ]
+  }
 }
