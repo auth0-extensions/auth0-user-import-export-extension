@@ -1,6 +1,6 @@
 {
   "name": "auth0-user-import-export-extension",
-  "version": "2.4.5",
+  "version": "2.4.6",
   "description": "An extension that allows you to import and export users to your Auth0 account",
   "author": "Auth0",
   "license": "MIT",

@@ -1,3 +1,7 @@
+## [2.4.6] - Unreleased
+
+- `PUBLIC_WT_URL` generation fixed for specific clusters
+
 ## [2.4.5] - 2018-09-24
 
 - Use search engine v3

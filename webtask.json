@@ -1,7 +1,7 @@
 {
   "title": "User Import / Export",
   "name": "auth0-user-import-export",
-  "version": "2.4.5",
+  "version": "2.4.6",
   "preVersion": "2.4.4",
   "author": "auth0",
   "useHashName": false,
