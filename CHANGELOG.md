@@ -1,4 +1,4 @@
-## [2.4.6] - Unreleased
+## [2.4.6] - 2019-04-18
 
 - `PUBLIC_WT_URL` generation fixed for specific clusters
 
