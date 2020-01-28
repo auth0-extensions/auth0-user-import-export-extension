@@ -41,3 +41,22 @@ npm run build
 ```
 yarn add "some-dep@some-version" --ignore-engines
 ```
+
+## Release Process
+
+Deployment is currently done using this tool: https://auth0-extensions.us8.webtask.io/extensions-deploy
+
+First bump the version in `package.json` and in `webtask.json`
+
+Then build the extension:
+
+```bash
+nvm use 8
+yarn install
+npm run build
+```
+
+Bundle file (`auth0-user-import-export.extension.VERSION.js`) is found in `/dist`
+Asset files are also found in `/dist`
+
+Follow the instructions in the deployment tool.  This tool will also automatically generate a PR in the `auth0-extensions` repo.  Only after the PR is merged will the extension be available in production.  Before merging the PR you can use this tool to test the upgrade: https://github.com/auth0-extensions/auth0-extension-update-tester by overriding the `extensions.json` file that is fetched by the dashboard.
