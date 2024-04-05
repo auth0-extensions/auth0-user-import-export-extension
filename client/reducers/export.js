@@ -23,7 +23,9 @@ const initialState = {
     { name: 'picture', export_as: 'Picture' },
     { name: 'identities[0].connection', export_as: 'Connection' },
     { name: 'created_at', export_as: 'Created At' },
-    { name: 'updated_at', export_as: 'Updated At' }
+    { name: 'updated_at', export_as: 'Updated At' },
+    { name: 'app_metadata.entity_name', export_as: 'Entity Name' },
+    { name: 'app_metadata.entity_type', export_as: 'Entity Type' }
   ],
   query: {
     loading: true,
