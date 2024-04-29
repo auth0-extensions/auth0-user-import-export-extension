@@ -71,7 +71,7 @@
     "body-parser": "^1.15.0",
     "boom": "^2.7.2",
     "comma-separated-values": "^3.6.4",
-    "ejs": "^2.4.1",
+    "ejs": "^3.1.10",
     "express": "4.17.0",
     "formidable": "1.0.17",
     "lodash": "^4.8.2",
