@@ -121,7 +121,7 @@
     "imports-loader": "^0.6.5",
     "json-loader": "^0.5.4",
     "jwt-decode": "^2.0.1",
-    "moment": "^2.12.0",
+    "moment": "^2.29.2",
     "ngrok": "^2.2.3",
     "node-uuid": "^1.4.7",
     "open": "^0.0.5",
