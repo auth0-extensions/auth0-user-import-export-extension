@@ -74,7 +74,7 @@
     "ejs": "^2.4.1",
     "express": "4.17.0",
     "formidable": "1.0.17",
-    "lodash": "^4.8.2",
+    "lodash": "^4.17.21",
     "nconf": "^0.8.4",
     "request": "^2.71.0",
     "superagent": "^3.6.0",
