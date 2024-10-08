@@ -72,7 +72,7 @@
     "boom": "^2.7.2",
     "comma-separated-values": "^3.6.4",
     "ejs": "^2.4.1",
-    "express": "4.17.0",
+    "express": "4.21.1",
     "formidable": "1.0.17",
     "lodash": "^4.8.2",
     "nconf": "^0.8.4",
