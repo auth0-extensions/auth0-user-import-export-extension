@@ -78,7 +78,7 @@
     "nconf": "^0.8.4",
     "request": "^2.71.0",
     "superagent": "^3.6.0",
-    "webtask-tools": "^3.1.1",
+    "webtask-tools": "^3.4.1",
     "winston": "^2.3.0"
   },
   "devDependencies": {
